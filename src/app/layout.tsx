@@ -11,8 +11,8 @@ import theme from "@/components/ThemeRegistry/theme";
 import Header from "@/components/Header";
 
 export const metadata = {
-  title: "Next.js App Router + Material UI v5",
-  description: "Next.js App Router + Material UI v5",
+  title: "PTT Monitor v0",
+  description: "PTT Monitor v0",
 };
 
 const DRAWER_WIDTH = 240;

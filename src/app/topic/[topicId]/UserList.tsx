@@ -26,7 +26,7 @@ export default function UserList({
   const { data: topicData } = useTopic(topicId);
   const { data, setSize } = useTopicUsers(topicId, {
     stance: stance,
-    limit: 12,
+    limit: 24,
   });
 
   console.log(data);
