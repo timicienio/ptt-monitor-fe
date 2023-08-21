@@ -14,7 +14,7 @@ function TopicsChart() {
 
   const chartData = {
     id: "root",
-    value: 0,
+    value: 1,
     children:
       data?.data.topics.map((topic) => ({
         id: String(topic.id),
