@@ -188,6 +188,8 @@ export interface components {
        * Format: date-time
        */
       time: string;
+      /** Content */
+      content: string;
     };
     /** UserPost */
     UserPost: {
@@ -432,7 +434,7 @@ export interface operations {
   browse_user_topics_user__user_id__topic_get: {
     parameters: {
       path: {
-        user_id: number;
+        user_id: string;
       };
     };
     responses: {

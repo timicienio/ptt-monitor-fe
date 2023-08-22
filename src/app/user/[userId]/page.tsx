@@ -68,7 +68,7 @@ const commentTypeToSymbol = {
   BOO: "噓",
 };
 
-export default function UserPage({ params }: { params: { userId: number } }) {
+export default function UserPage({ params }: { params: { userId: string } }) {
   const { data } = useUser(params.userId);
   const { data: userTopicsData } = useUserTopics(params.userId);
   const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(
@@ -153,13 +153,24 @@ export default function UserPage({ params }: { params: { userId: number } }) {
           </Card>
           <Card
             elevation={4}
-            sx={{ border: 1, borderRadius: 2, width: "100%", px: 2 }}
+            sx={{
+              border: 1,
+              borderRadius: 2,
+              width: "100%",
+              px: 2,
+            }}
           >
             <CardContent>
               <Typography variant="h5" sx={{ mb: 2 }}>
                 最近參與的話題
               </Typography>
-              <Box sx={{ display: "flex", gap: 1 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 1,
+                  flexWrap: "wrap",
+                }}
+              >
                 {userTopics.map((topic) => (
                   <Chip
                     variant="outlined"
@@ -168,8 +179,6 @@ export default function UserPage({ params }: { params: { userId: number } }) {
                     label={topic.keywords.at(0)?.value}
                   />
                 ))}
-                <Chip variant="outlined" component="a" label="疫情" />
-                <Chip variant="outlined" component="a" label="選舉" />
               </Box>
             </CardContent>
           </Card>
@@ -200,24 +209,6 @@ export default function UserPage({ params }: { params: { userId: number } }) {
                     />
                   </Box>
                 ))}
-                <Box sx={{ minWidth: 100 }}>
-                  <Typography>台北市長</Typography>
-                  <StanceIndicator
-                    value={70}
-                    disabled
-                    valueLabelDisplay="on"
-                    marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
-                  />
-                </Box>
-                <Box sx={{ minWidth: 100 }}>
-                  <Typography>新竹</Typography>
-                  <StanceIndicator
-                    value={30}
-                    disabled
-                    valueLabelDisplay="on"
-                    marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
-                  />
-                </Box>
               </Box>
             </CardContent>
           </Card>
@@ -427,7 +418,7 @@ export default function UserPage({ params }: { params: { userId: number } }) {
                         variant="outlined"
                       />
                       <Typography sx={{ ml: 1 }} variant="caption">
-                        留言 bla bla bla...
+                        {comment.comment.content}
                       </Typography>
                     </Box>
                   </ListItem>
