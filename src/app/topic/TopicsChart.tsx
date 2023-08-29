@@ -20,8 +20,8 @@ function TopicsChart() {
         id: String(topic.id),
         value: topic.size,
         children: topic.keywords.map((keyword) => ({
-          id: `${keyword.value}__${topic.id}`,
-          value: keyword.tfidf,
+          id: `${keyword.name}__${topic.id}`,
+          value: keyword.value,
         })),
       })) ?? [],
   };
@@ -70,7 +70,7 @@ function TopicsChart() {
           {zoomedTopicId
             ? `熱門話題: ${
                 data?.data.topics.at(Number(zoomedTopicId))?.keywords.at(0)
-                  ?.value
+                  ?.name
               }`
             : "全部話題"}
         </Typography>

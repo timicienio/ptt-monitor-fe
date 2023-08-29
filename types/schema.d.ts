@@ -52,10 +52,19 @@ export interface components {
      * @enum {string}
      */
     BrowsePostsInTopicSort: "HYBRID" | "RELATIVE" | "POPULAR" | "TIME";
+    /** BrowseTopic */
+    BrowseTopic: {
+      /** Id */
+      id: number;
+      /** Size */
+      size: number;
+      /** Keywords */
+      keywords: components["schemas"]["Keyword"][];
+    };
     /** BrowseTopicOutput */
-    BrowseTopicOutput: {
+    BrowseTopicOutputOutput: {
       /** Topics */
-      topics: components["schemas"]["TopicWithSize"][];
+      topics: components["schemas"]["BrowseTopic"][];
     };
     /** BrowseUserCommentsOutput */
     BrowseUserCommentsOutput: {
@@ -65,7 +74,7 @@ export interface components {
     /** BrowseUserTopicsOutput */
     BrowseUserTopicsOutput: {
       /** Topics */
-      topics: components["schemas"]["Topic"][];
+      topics: components["schemas"]["BrowseTopic"][];
     };
     /** BrowseUsersInTopicOutput */
     BrowseUsersInTopicOutput: {
@@ -82,24 +91,29 @@ export interface components {
       post: components["schemas"]["UserPost"];
       comment: components["schemas"]["UserComment"];
     };
+    /** GetTopicPostsOutput */
+    GetTopicPostsOutput: {
+      /** Total Count */
+      total_count: number;
+      /** Posts */
+      posts: components["schemas"]["UserPost"][];
+    };
     /** GetUserPostsOutput */
     GetUserPostsOutput: {
       /** Posts */
       posts: components["schemas"]["UserPost"][];
-      /** Total Count */
-      total_count: number;
     };
     /** HTTPValidationError */
     HTTPValidationError: {
       /** Detail */
       detail?: components["schemas"]["ValidationError"][];
     };
-    /** KeyWord */
-    KeyWord: {
-      /** Tfidf */
-      tfidf: number;
+    /** Keyword */
+    Keyword: {
       /** Value */
-      value: string;
+      value: number;
+      /** Name */
+      name: string;
     };
     /** MetaCount */
     MetaCount: {
@@ -120,10 +134,8 @@ export interface components {
     ReadTopicOutput: {
       /** Id */
       id: number;
-      /** Size */
-      size: number;
       /** Keywords */
-      keywords: components["schemas"]["KeyWord"][];
+      keywords: components["schemas"]["Keyword"][];
       meta: components["schemas"]["MetaData"];
     };
     /**
@@ -131,26 +143,6 @@ export interface components {
      * @enum {string}
      */
     StanceType: "POSITIVE" | "NEGATIVE" | "ALL";
-    /** Topic */
-    Topic: {
-      /** Id */
-      id: number;
-      /** Name */
-      name: string;
-      /** Keywords */
-      keywords: components["schemas"]["KeyWord"][];
-    };
-    /** TopicWithSize */
-    TopicWithSize: {
-      /** Id */
-      id: number;
-      /** Name */
-      name: string;
-      /** Keywords */
-      keywords: components["schemas"]["KeyWord"][];
-      /** Size */
-      size: number;
-    };
     /** User */
     User: {
       /** Id */
@@ -188,8 +180,6 @@ export interface components {
        * Format: date-time
        */
       time: string;
-      /** Content */
-      content: string;
     };
     /** UserPost */
     UserPost: {
@@ -274,7 +264,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["BrowseTopicOutput"];
+          "application/json": components["schemas"]["BrowseTopicOutputOutput"];
         };
       };
     };
@@ -317,7 +307,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["GetUserPostsOutput"];
+          "application/json": components["schemas"]["GetTopicPostsOutput"];
         };
       };
       /** @description Validation Error */

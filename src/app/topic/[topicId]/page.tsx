@@ -33,7 +33,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
           textAlign={"left"}
           sx={{ flexShrink: 0, mr: 3 }}
         >
-          熱門話題: {data?.data.keywords.at(0)?.value}
+          熱門話題: {data?.data.keywords.at(0)?.name}
         </Typography>
         <Typography sx={{ mt: 1, mr: 1 }}>{postCount?.negative}</Typography>
         <Box
