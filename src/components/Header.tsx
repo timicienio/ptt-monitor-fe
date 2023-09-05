@@ -1,9 +1,9 @@
 import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
 
 const navItems = [
-  { text: "熱門話題分類", href: "/topic" },
-  { text: "使用者查詢", href: "/user", disabled: true },
-  { text: "PTT 網頁版", href: "https://www.pttweb.cc/" },
+  { text: "熱門話題分類", href: "/topic", disabled: false },
+  { text: "使用者查詢", href: "/user", disabled: false },
+  { text: "PTT 網頁版", href: "https://www.pttweb.cc/", disabled: false },
 ];
 
 export default function Header() {

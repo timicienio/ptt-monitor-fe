@@ -41,12 +41,25 @@ export interface paths {
     /** Browse User Topics */
     get: operations["browse_user_topics_user__user_id__topic_get"];
   };
+  "/user": {
+    /** Browse User */
+    get: operations["browse_user_user_get"];
+  };
+  "/active-user": {
+    /** Browse Active User */
+    get: operations["browse_active_user_active_user_get"];
+  };
 }
 
 export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
+    /**
+     * ActiveUserType
+     * @enum {string}
+     */
+    ActiveUserType: "POST" | "COMMENT";
     /**
      * BrowsePostsInTopicSort
      * @enum {string}
@@ -180,6 +193,8 @@ export interface components {
        * Format: date-time
        */
       time: string;
+      /** Content */
+      content: string;
     };
     /** UserPost */
     UserPost: {
@@ -212,6 +227,34 @@ export interface components {
       /** Comment Count */
       comment_count: number;
       stance: components["schemas"]["StanceType"];
+    };
+    /** UserWithDataCount */
+    UserWithDataCount: {
+      /** Id */
+      id: string;
+      /** Money */
+      money: string;
+      /** Login Count */
+      login_count: number;
+      /** Verified */
+      verified: boolean;
+      /** Legal Post */
+      legal_post: number;
+      /** Illegal Post */
+      illegal_post: number;
+      /** Activity */
+      activity: string;
+      /** Mail */
+      mail: string;
+      /**
+       * Last Login Date
+       * Format: date-time
+       */
+      last_login_date: string;
+      /** Last Login Ip */
+      last_login_ip: string;
+      /** Count */
+      count: number;
     };
     /** ValidationError */
     ValidationError: {
@@ -432,6 +475,56 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["BrowseUserTopicsOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Browse User */
+  browse_user_user_get: {
+    parameters: {
+      query?: {
+        user_id?: string | null;
+        limit?: number;
+        offset?: number;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["User"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Browse Active User */
+  browse_active_user_active_user_get: {
+    parameters: {
+      query: {
+        browse_type: components["schemas"]["ActiveUserType"];
+        limit?: number;
+        offset?: number;
+        start_time?: string | null;
+        end_time?: string | null;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserWithDataCount"][];
         };
       };
       /** @description Validation Error */

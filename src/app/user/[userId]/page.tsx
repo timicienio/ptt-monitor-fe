@@ -176,7 +176,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                     variant="outlined"
                     component="a"
                     href={`/topic/${topic.id}`}
-                    label={topic.keywords.at(0)?.value}
+                    label={topic.keywords.at(0)?.name}
                   />
                 ))}
               </Box>
@@ -200,7 +200,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               >
                 {userTopics.map((topic) => (
                   <Box sx={{ minWidth: 100 }}>
-                    <Typography>{topic.keywords.at(0)?.value}</Typography>
+                    <Typography>{topic.keywords.at(0)?.name}</Typography>
                     <StanceIndicator
                       value={70}
                       disabled

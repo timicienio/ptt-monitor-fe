@@ -1,5 +1,12 @@
 import api from "../api";
 
+export const browseUsers = api.path("/user").method("get").create();
+
+export const browseActiveUsers = api
+  .path("/active-user")
+  .method("get")
+  .create();
+
 export const browseTopicUsers = api
   .path("/topic/{topic_id}/user")
   .method("get")
