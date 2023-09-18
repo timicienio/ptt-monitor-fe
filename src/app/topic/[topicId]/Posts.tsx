@@ -14,9 +14,10 @@ import useTopicPosts, { TopicPostsSortOption } from "@/lib/post/useTopicPosts";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import ceil from "lodash/ceil";
+import SortIcon from '@mui/icons-material/Sort';
 
 const filterOptions: { value: TopicPostsSortOption; label: string }[] = [
-  { value: "HYBRID", label: "最相關+熱度" },
+  { value: "HYBRID", label: "最佳（最相關 + 熱度）" },
   { value: "RELATIVE", label: "最相關" },
   { value: "POPULAR", label: "熱度" },
   { value: "TIME", label: "時間" },
@@ -71,7 +72,7 @@ export default function Posts({
             gap: 6,
           }}
         >
-          <Typography variant="h5">所有文章</Typography>
+          <Typography variant="h3">文章列表</Typography>
           <Box
             sx={{
               display: "flex",
@@ -80,8 +81,9 @@ export default function Posts({
               flexDirection: "row",
             }}
           >
-            <Typography variant="body1">排序：</Typography>
+            <SortIcon/>
             <Select
+              sx={{ borderRadius: 2, }}
               size="small"
               value={selectedFilterOptionValue}
               onChange={(e) =>
@@ -96,8 +98,19 @@ export default function Posts({
             </Select>
           </Box>
         </Box>
-        <Button color="info" onClick={toggleMode}>
-          使用者立場
+        <Button 
+          onClick={toggleMode} 
+          sx={{ 
+            variabt: 'h5',
+            color: 'info.main',
+            border: '1px solid',
+            borderColor: 'info.main',
+            '&:hover': {
+              backgroundColor: 'info.light'
+            }
+          }}
+        >
+          使用者立場分析
         </Button>
       </Box>
       <List>

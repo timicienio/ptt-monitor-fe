@@ -16,18 +16,20 @@ import {
   ListItem,
   Slider,
   styled,
+  Button
 } from "@mui/material";
 import useUserTopics from "@/lib/topic/useUserTopics";
 import useUserPosts from "@/lib/post/useUserPosts";
 import useUserComments from "@/lib/comment.ts/useUserComments";
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-const StanceIndicator = styled(Slider)(({ theme }) => ({
+const StanceIndicator = styled(Slider)(({ theme, value = 40 }) => ({
   height: 4,
   padding: "15px 0",
   "& .MuiSlider-thumb": {
     height: 28,
     width: 28,
-    backgroundColor: "#fff",
+    backgroundColor: (Array.isArray(value) ? value[0] : value) >= 50 ? "#F49E4C" : "#3B8EA5",
   },
   "& .MuiSlider-valueLabel": {
     fontSize: 12,
@@ -117,77 +119,131 @@ export default function UserPage({ params }: { params: { userId: string } }) {
         <Box
           sx={{
             width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
+            display: 'flex',
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            marginBottom: '20px'
           }}
         >
-          <Card
-            elevation={4}
-            sx={{ border: 1, borderRadius: 2, width: "100%", px: 2 }}
-          >
-            <CardContent>
-              <Typography variant="h5" sx={{ mb: 2 }}>
-                基本資料
-              </Typography>
-              <Box sx={{ display: "flex", flexDirection: "row", mb: 1 }}>
-                <Typography sx={{ minWidth: 180 }}>
-                  登入次數: {user?.login_count}
-                </Typography>
-                <Typography sx={{ minWidth: 180 }}>
-                  目前動態: {user?.activity}
-                </Typography>
-                <Typography sx={{ minWidth: 180 }}>
-                  信箱狀態: {user?.mail}
-                </Typography>
-              </Box>
-              <Box sx={{ display: "flex", flexDirection: "row" }}>
-                <Typography sx={{ minWidth: 180 }}>
-                  有效文章: {user?.legal_post}
-                </Typography>
-                <Typography sx={{ minWidth: 180 }}>
-                  退文文章: {user?.illegal_post}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-          <Card
-            elevation={4}
+          <Box sx={{ width: '23%', p: 2, backgroundColor: 'secondary.dark', borderRadius: 2 }}>
+            <Typography variant="h5" sx={{ color: 'secondary.contrastText' }}>
+              總發文
+            </Typography>
+            <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
+              {userPosts.length}
+            </Typography>
+          </Box>
+          <Box sx={{ width: '23%', p: 2, backgroundColor: 'secondary.main', borderRadius: 2 }}>
+            <Typography variant="h5" sx={{ color: 'secondary.contrastText' }}>
+              總留言
+            </Typography>
+            <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
+              {userComments.length}
+            </Typography>
+          </Box>
+          <Box sx={{ width: '23%', p: 2, backgroundColor: 'secondary.light', borderRadius: 2 }}>
+            <Typography variant="h5" sx={{ color: 'secondary.contrastText' }}>
+              推文數
+            </Typography>
+            <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
+              待完成
+            </Typography>
+          </Box>
+          <Box sx={{ width: '23%', p: 2, backgroundColor: 'error.main', borderRadius: 2 }}>
+            <Typography variant="h5" sx={{ color: 'secondary.contrastText' }}>
+              噓文數
+            </Typography>
+            <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
+              待完成
+            </Typography>
+          </Box>
+        </Box>
+        <Box>
+          <Box
             sx={{
-              border: 1,
-              borderRadius: 2,
+              display: "flex",
               width: "100%",
-              px: 2,
+              justifyContent: "space-between",
+              gap: 2,
             }}
           >
-            <CardContent>
-              <Typography variant="h5" sx={{ mb: 2 }}>
-                最近參與的話題
-              </Typography>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 1,
-                  flexWrap: "wrap",
-                }}
-              >
-                {userTopics.map((topic) => (
-                  <Chip
-                    variant="outlined"
-                    component="a"
-                    href={`/topic/${topic.id}`}
-                    label={topic.keywords.at(0)?.name}
-                  />
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
+            <Card
+              elevation={0}
+              sx={{ borderRadius: 2, flex: '1 1 calc(50% - 8px)', px: 2 }}
+            >
+              <CardContent>
+                <Typography variant="h3" sx={{ mb: 2 }}>
+                  基本資料
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "row", mb: 1 }}>
+                  <Typography sx={{ minWidth: 130 }}>
+                    登入次數: {user?.login_count}
+                  </Typography>
+                  <Typography sx={{ minWidth: 150 }}>
+                    目前動態: {user?.activity}
+                  </Typography>
+                  <Typography sx={{ minWidth: 160 }}>
+                    信箱狀態: {user?.mail}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", flexDirection: "row" }}>
+                  <Typography sx={{ minWidth: 130 }}>
+                    有效文章: {user?.legal_post}
+                  </Typography>
+                  <Typography sx={{ minWidth: 150 }}>
+                    退文文章: {user?.illegal_post}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                  <Button 
+                    sx={{ 
+                      width: '100%', 
+                      backgroundColor: 'primary.main', 
+                      color: 'primary.dark',
+                      '&:hover': {
+                        backgroundColor: 'primary.light'
+                      }
+                    }}
+                  >
+                    群體分析
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+            <Card
+              elevation={0}
+              sx={{ borderRadius: 2, flex: '1 1 calc(50% - 8px)', px: 2 }} 
+            >
+              <CardContent>
+                <Typography variant="h3" sx={{ mb: 2 }}>
+                  最近參與的話題
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {userTopics.map((topic) => (
+                    <Chip
+                      variant="outlined"
+                      component="a"
+                      href={`/topic/${topic.id}`}
+                      label={topic.keywords.at(0)?.name}
+                    />
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
           <Card
-            elevation={4}
-            sx={{ border: 1, borderRadius: 2, width: "100%", px: 2 }}
+            elevation={0}
+            sx={{ borderRadius: 2, width: "100%", px: 2, mt: 2, backgroundColor: 'secondary.contrastText' }}
           >
             <CardContent>
-              <Typography variant="h5" sx={{ mb: 2 }}>
+              <Typography variant="h3" sx={{ mb: 2 }}>
                 熱門話題立場
               </Typography>
               <Box
@@ -212,221 +268,263 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               </Box>
             </CardContent>
           </Card>
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="h5">最新發文</Typography>
-            <List>
-              <Divider />
-              {userPostsIsLoading && (
-                <Box
-                  sx={{
-                    height: "300px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+          <Card
+            elevation={0}
+            sx={{ borderRadius: 2, width: "100%", px: 2, mt: 2, backgroundColor: 'secondary.contrastText' }}
+          >
+            <Box sx={{ mt: 3, width: "100%" }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h3">最新發文</Typography>
+                <Button 
+                  sx={{ 
+                    variabt: 'h5',
+                    color: 'info.main',
+                    border: '1px solid',
+                    borderColor: 'info.main',
+                    '&:hover': {
+                      backgroundColor: 'info.light'
+                    }
                   }}
                 >
-                  <CircularProgress color="inherit" />
-                </Box>
-              )}
-              {userPosts.map((post) => (
-                <>
-                  <ListItem
-                    key={post.aid}
+                  全部發文
+                  <KeyboardArrowRightIcon/>
+                </Button>
+              </Box>
+              <List>
+                <Divider />
+                {userPostsIsLoading && (
+                  <Box
                     sx={{
+                      height: "300px",
                       display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    <Box>
-                      <Typography
-                        component="a"
-                        sx={{ textDecoration: "none", color: "inherit" }}
-                        href={post.url}
-                      >
-                        {post.title}
-                      </Typography>
-                    </Box>
-                    <Box
+                    <CircularProgress color="inherit" />
+                  </Box>
+                )}
+                {userPosts.map((post) => (
+                  <>
+                    <ListItem
+                      key={post.aid}
                       sx={{
                         display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
                       }}
                     >
+                      <Box>
+                        <Typography
+                          component="a"
+                          sx={{ textDecoration: "none", color: "inherit" }}
+                          href={post.url}
+                        >
+                          {post.title}
+                        </Typography>
+                      </Box>
                       <Box
                         sx={{
                           display: "flex",
-                          gap: 2,
+                          justifyContent: "space-between",
+                          width: "100%",
                         }}
                       >
-                        <Typography
-                          component="a"
-                          variant="caption"
-                          sx={{ textDecoration: "none", color: "inherit" }}
-                          href={`/user/${post.author}`}
-                        >
-                          {post.author}
-                        </Typography>
-                        <Typography
-                          variant="caption"
+                        <Box
                           sx={{
-                            opacity: 0.6,
+                            display: "flex",
+                            gap: 2,
                           }}
                         >
-                          {post.push + post.boo + post.arrow} 留言
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            opacity: 0.6,
-                          }}
-                        >
-                          {post.push} 推
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            opacity: 0.6,
-                          }}
-                        >
-                          {post.arrow} →
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            opacity: 0.6,
-                          }}
-                        >
-                          {post.boo} 噓
+                          <Typography
+                            component="a"
+                            variant="caption"
+                            sx={{ textDecoration: "none", color: "inherit" }}
+                            href={`/user/${post.author}`}
+                          >
+                            {post.author}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              opacity: 0.6,
+                            }}
+                          >
+                            {post.push + post.boo + post.arrow} 留言
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              opacity: 0.6,
+                            }}
+                          >
+                            {post.push} 推
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              opacity: 0.6,
+                            }}
+                          >
+                            {post.arrow} →
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              opacity: 0.6,
+                            }}
+                          >
+                            {post.boo} 噓
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption">
+                          {moment(post.date).format("M/D YYYY")}
                         </Typography>
                       </Box>
-                      <Typography variant="caption">
-                        {moment(post.date).format("M/D YYYY")}
-                      </Typography>
-                    </Box>
-                  </ListItem>
-                  <Divider />
-                </>
-              ))}
-            </List>
-          </Box>
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="h5">最新留言</Typography>
-            <List>
-              <Divider />
-              {userCommentsIsLoading && (
-                <Box
-                  sx={{
-                    height: "300px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    </ListItem>
+                    <Divider />
+                  </>
+                ))}
+              </List>
+            </Box>
+          </Card>
+          <Card
+            elevation={0}
+            sx={{ borderRadius: 2, width: "100%", px: 2, mt: 2, backgroundColor: 'secondary.contrastText' }}
+          >
+            <Box sx={{ mt: 3, width: "100%" }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h3">最新留言</Typography>
+                <Button 
+                  sx={{ 
+                    variabt: 'h5',
+                    color: 'info.main',
+                    border: '1px solid',
+                    borderColor: 'info.main',
+                    '&:hover': {
+                      backgroundColor: 'info.light'
+                    }
                   }}
                 >
-                  <CircularProgress color="inherit" />
-                </Box>
-              )}
-              {userComments.map((comment, index) => (
-                <>
-                  <ListItem
-                    key={`${comment.post.aid}-${index}`}
+                  全部留言
+                  <KeyboardArrowRightIcon/>
+                </Button>
+              </Box>
+              <List>
+                <Divider />
+                {userCommentsIsLoading && (
+                  <Box
                     sx={{
+                      height: "300px",
                       display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                   >
-                    <Box>
-                      <Typography
-                        component="a"
-                        sx={{ textDecoration: "none", color: "inherit" }}
-                        href={comment.post.url}
-                      >
-                        {comment.post.title}
-                      </Typography>
-                    </Box>
-                    <Box
+                    <CircularProgress color="inherit" />
+                  </Box>
+                )}
+                {userComments.map((comment, index) => (
+                  <>
+                    <ListItem
+                      key={`${comment.post.aid}-${index}`}
                       sx={{
                         display: "flex",
-                        justifyContent: "space-between",
-                        width: "100%",
+                        flexDirection: "column",
+                        alignItems: "flex-start",
                       }}
                     >
+                      <Box>
+                        <Typography
+                          component="a"
+                          sx={{ textDecoration: "none", color: "inherit" }}
+                          href={comment.post.url}
+                        >
+                          {comment.post.title}
+                        </Typography>
+                      </Box>
                       <Box
                         sx={{
                           display: "flex",
-                          gap: 2,
+                          justifyContent: "space-between",
+                          width: "100%",
                         }}
                       >
-                        <Typography
-                          component="a"
-                          variant="caption"
-                          sx={{ textDecoration: "none", color: "inherit" }}
-                          href={`/user/${comment.post.author}`}
-                        >
-                          {comment.post.author}
-                        </Typography>
-                        <Typography
-                          variant="caption"
+                        <Box
                           sx={{
-                            opacity: 0.6,
+                            display: "flex",
+                            gap: 2,
                           }}
                         >
-                          {comment.post.push +
-                            comment.post.boo +
-                            comment.post.arrow}{" "}
-                          留言
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            opacity: 0.6,
-                          }}
-                        >
-                          {comment.post.push} 推
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            opacity: 0.6,
-                          }}
-                        >
-                          {comment.post.arrow} →
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            opacity: 0.6,
-                          }}
-                        >
-                          {comment.post.boo} 噓
+                          <Typography
+                            component="a"
+                            variant="caption"
+                            sx={{ textDecoration: "none", color: "inherit" }}
+                            href={`/user/${comment.post.author}`}
+                          >
+                            {comment.post.author}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              opacity: 0.6,
+                            }}
+                          >
+                            {comment.post.push +
+                              comment.post.boo +
+                              comment.post.arrow}{" "}
+                            留言
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              opacity: 0.6,
+                            }}
+                          >
+                            {comment.post.push} 推
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              opacity: 0.6,
+                            }}
+                          >
+                            {comment.post.arrow} →
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              opacity: 0.6,
+                            }}
+                          >
+                            {comment.post.boo} 噓
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption">
+                          {moment(comment.post.date).format("M/D YYYY")}
                         </Typography>
                       </Box>
-                      <Typography variant="caption">
-                        {moment(comment.post.date).format("M/D YYYY")}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ mt: 0.5 }}>
-                      <Chip
-                        label={
-                          commentTypeToSymbol[
-                            comment.comment.type as "PUSH" | "ARROW" | "BOO"
-                          ]
-                        }
-                        size="small"
-                        variant="outlined"
-                      />
-                      <Typography sx={{ ml: 1 }} variant="caption">
-                        {comment.comment.content}
-                      </Typography>
-                    </Box>
-                  </ListItem>
-                  <Divider />
-                </>
-              ))}
-            </List>
-          </Box>
+                      <Box sx={{ mt: 0.5 }}>
+                        <Chip
+                          label={
+                            commentTypeToSymbol[
+                              comment.comment.type as "PUSH" | "ARROW" | "BOO"
+                            ]
+                          }
+                          size="small"
+                          variant="outlined"
+                        />
+                        <Typography sx={{ ml: 1 }} variant="caption">
+                          {comment.comment.content}
+                        </Typography>
+                      </Box>
+                    </ListItem>
+                    <Divider />
+                  </>
+                ))}
+              </List>
+            </Box>
+          </Card>
         </Box>
       </Box>
     </Container>

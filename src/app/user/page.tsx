@@ -109,10 +109,36 @@ export default function UserOverviewPage() {
               }
               options={users?.data.map((user) => user.id) ?? []}
               renderInput={(params) => (
-                <TextField label="查詢使用者名稱" {...params} size="medium" />
+                <TextField 
+                  label="查詢使用者名稱" 
+                  {...params} 
+                  size="medium"
+                  sx={{
+                    '& .MuiInputBase-root': {
+                        height: '45px',
+                        display: 'flex',
+                        alignItems: 'center', 
+                        borderRadius: '12px',
+                        borderColor: 'primary.dark'
+                    },
+                    '& .MuiInputBase-input': {
+                        padding: '6px 12px',  
+                    },
+                    '& .MuiInputLabel-root': {
+                        transform: 'translate(14px, 12px) scale(1)', 
+                        '&.MuiInputLabel-shrink': {
+                            transform: 'translate(14px, -6px) scale(0.75)',
+                        }
+                    }
+                  }} 
+                />
               )}
               sx={{
                 width: 240,
+                '& .MuiAutocomplete-listbox': {
+                  borderRadius: '12px',
+                  borderColor: 'primary.dark'
+                }
               }}
             />
           </Box>
@@ -127,8 +153,8 @@ export default function UserOverviewPage() {
           }}
         >
           <Card
-            elevation={4}
-            sx={{ border: 1, borderRadius: 2, width: "100%", px: 2 }}
+            elevation={0}
+            sx={{ borderRadius: 2, width: "100%", px: 2 }}
           >
             <CardContent
               sx={{
@@ -137,7 +163,7 @@ export default function UserOverviewPage() {
                 height: "100%",
               }}
             >
-              <Typography variant="h5" sx={{ mb: 2 }}>
+              <Typography variant="h3" sx={{ mb: 2 }}>
                 發文活躍使用者
               </Typography>
               <Box
@@ -161,8 +187,8 @@ export default function UserOverviewPage() {
             </CardContent>
           </Card>
           <Card
-            elevation={4}
-            sx={{ border: 1, borderRadius: 2, width: "100%", px: 2 }}
+            elevation={0}
+            sx={{ borderRadius: 2, width: "100%", px: 2 }}
           >
             <CardContent
               sx={{
@@ -171,7 +197,7 @@ export default function UserOverviewPage() {
                 height: "100%",
               }}
             >
-              <Typography variant="h5" sx={{ mb: 2 }}>
+              <Typography variant="h3" sx={{ mb: 2 }}>
                 留言活躍使用者
               </Typography>
               <Box

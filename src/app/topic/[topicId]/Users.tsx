@@ -36,10 +36,21 @@ export default function Users({
             gap: 6,
           }}
         >
-          <Typography variant="h5">使用者立場</Typography>
+          <Typography variant="h3">使用者立場</Typography>
         </Box>
-        <Button color="info" onClick={toggleMode}>
-          所有文章
+        <Button 
+          onClick={toggleMode} 
+          sx={{ 
+            variabt: 'h5',
+            color: 'info.main',
+            border: '1px solid',
+            borderColor: 'info.main',
+            '&:hover': {
+              backgroundColor: 'info.light'
+            }
+          }}
+        >
+          文章列表
         </Button>
       </Box>
       <Box
