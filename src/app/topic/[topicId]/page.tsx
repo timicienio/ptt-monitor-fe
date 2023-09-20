@@ -82,7 +82,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
                 ml: 2  // Added this to give some space after the header
               }}
             >
-              <Typography sx={{ mt: 1, mr: 1, margin: 0 }}>{topicStance[0]?.name} 12 人</Typography>
+              <Typography sx={{ mt: 1, mr: 1, margin: 0 }}>{topicStance[0]?.name}：12 人</Typography>
               <Box
                 sx={{
                   width: "120px",
@@ -104,7 +104,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
                   color="secondary"
                 />
               </Box>
-              <Typography sx={{ mt: 1, ml: 1, margin: 0 }}>{topicStance[1]?.name} 13 人</Typography>
+              <Typography sx={{ mt: 1, ml: 1, margin: 0 }}>{topicStance[1]?.name}：13 人</Typography>
             </Box>
           )}
         </Box>
