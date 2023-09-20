@@ -2,7 +2,6 @@
 
 import useTopic from "@/lib/topic/useTopic";
 import { Container, Box, Typography, LinearProgress, Card } from "@mui/material";
-import { useState } from "react";
 import PostList from "./Posts";
 import UserList from "./Users";
 import useTopicStance from "@/lib/topic/useTopicStance";
@@ -11,7 +10,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
   const { data } = useTopic(Number(params.topicId));
   const { data: TopicStance } = useTopicStance(params.topicId);
 
-  const topicStance = TopicStance?.data;
+  const topicStance = TopicStance?.data.stances ?? [];;
   const postCount = data?.data.meta.post_count;
   const stanceRatio = ((postCount?.negative ?? 0) / ((postCount?.negative ?? Infinity) + (postCount?.positive ?? Infinity))) * 100;
 
@@ -71,7 +70,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
             justifyContent: "flex-start"  // Adjusting this
           }}
         >
-          <Typography variant="h3" sx={{ margin: 0 }}>話題立場</Typography>
+          <Typography variant="h3" sx={{ margin: 0, marginRight: "5px" }}>話題立場</Typography>
 
           {Array.isArray(topicStance) && topicStance.length > 0 && (
             <Box
