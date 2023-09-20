@@ -63,9 +63,28 @@ function TopicsChart() {
           variant="outlined"
           onClick={() => setZoomedTopicId(null)}
           disabled={!zoomedTopicId}
+          sx={{
+              color: 'info.main',  
+              borderColor: 'info.main',
+              backgroundColor: 'secondary.contrastText',
+              '&:hover': {
+                  color: 'info.main',  
+                  borderColor: 'info.main',
+                  backgroundColor: 'info.light',
+              },
+              '&:active': {
+                  backgroundColor: 'info.light', 
+              },
+              '&:disabled': {
+                  color: 'grey.500',
+                  borderColor: 'grey.500',
+                  backgroundColor: 'primary.light',
+              }
+          }}
         >
           返回全部話題
         </Button>
+
         <Typography variant="h5">
           {zoomedTopicId
             ? `熱門話題: ${
@@ -75,9 +94,26 @@ function TopicsChart() {
             : "全部話題"}
         </Typography>
         <Button
-          variant="contained"
           onClick={() => router.push(`/topic/${zoomedTopicId}`)}
           disabled={!zoomedTopicId}
+          sx={{
+              color: 'info.light',  
+              borderColor: 'info.main',
+              backgroundColor: 'info.main',
+              '&:hover': {
+                  color: 'info.light',  
+                  borderColor: 'info.dark',
+                  backgroundColor: 'info.dark',
+              },
+              '&:active': {
+                  backgroundColor: 'info.dark', 
+              },
+              '&:disabled': {
+                  color: 'grey.500',
+                  borderColor: 'grey.300',
+                  backgroundColor: 'grey.300',
+              }
+          }}
         >
           話題詳情
         </Button>

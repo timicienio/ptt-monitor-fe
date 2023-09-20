@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, Typography, Box, Button } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Tab, Tabs } from "@mui/material";
 
 const navItems = [
   { text: "熱門話題分類", href: "/topic", disabled: false },
@@ -7,7 +7,6 @@ const navItems = [
 ];
 
 export default function Header() {
-
   return (
     <AppBar component="nav" position="fixed" sx={{ zIndex: 2000 }}>
       <Toolbar
@@ -27,24 +26,25 @@ export default function Header() {
           PTT Monitor
         </Typography>
         <Box sx={{ display: { sm: "flex" }, gap: 3, mr: 5, height: '100%' }}>
-        {navItems.map((item) => (
-          <Button
-            sx={{
-              color: "secondary.contrastText",
-              '&:hover': {
-                color: "primary.dark",
-                backgroundColor: "secondary.contrastText",
-              },
-              height: '100%',
-            }}
-            key={item.text}
-            href={item.href}
-            disabled={item.disabled}
-          >
-            {item.text}
-          </Button>
-        ))}
-      </Box>
+          <Tabs>
+            {navItems.map((item, index) => (
+              <Tab
+                key={index}
+                label={item.text}
+                component="a"
+                href={item.href}
+                disabled={item.disabled}
+                sx={{
+                  color: "secondary.contrastText",
+                  '&:hover': {
+                    color: "primary.dark",
+                    backgroundColor: "secondary.contrastText",
+                  }
+                }}
+              />
+            ))}
+          </Tabs>
+        </Box>
       </Toolbar>
     </AppBar>
   );

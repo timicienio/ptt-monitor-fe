@@ -14,10 +14,8 @@ import UserList from "./UserList";
 
 export default function Users({
   topicId,
-  toggleMode,
 }: {
   topicId: number;
-  toggleMode: () => void;
 }) {
   return (
     <Box>
@@ -38,20 +36,6 @@ export default function Users({
         >
           <Typography variant="h3">使用者立場</Typography>
         </Box>
-        <Button 
-          onClick={toggleMode} 
-          sx={{ 
-            variabt: 'h5',
-            color: 'info.main',
-            border: '1px solid',
-            borderColor: 'info.main',
-            '&:hover': {
-              backgroundColor: 'info.light'
-            }
-          }}
-        >
-          文章列表
-        </Button>
       </Box>
       <Box
         sx={{

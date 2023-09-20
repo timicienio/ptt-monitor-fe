@@ -25,10 +25,8 @@ const filterOptions: { value: TopicPostsSortOption; label: string }[] = [
 
 export default function Posts({
   topicId,
-  toggleMode,
 }: {
   topicId: number;
-  toggleMode: () => void;
 }) {
   const [selectedFilterOptionValue, setSelectedFilterOptionValue] =
     useState<TopicPostsSortOption>("HYBRID");
@@ -98,20 +96,6 @@ export default function Posts({
             </Select>
           </Box>
         </Box>
-        <Button 
-          onClick={toggleMode} 
-          sx={{ 
-            variabt: 'h5',
-            color: 'info.main',
-            border: '1px solid',
-            borderColor: 'info.main',
-            '&:hover': {
-              backgroundColor: 'info.light'
-            }
-          }}
-        >
-          使用者立場分析
-        </Button>
       </Box>
       <List>
         <Divider />

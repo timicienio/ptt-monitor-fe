@@ -27,6 +27,7 @@ const theme = createTheme({
     info: {
       main: '#D2CA73',          // green (active)
       light: '#FEFDEC',         // light green (hover)
+      dark: '#8E8432'
     },
     error: {
       main: '#AB3428',          // red

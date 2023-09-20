@@ -21,6 +21,7 @@ import {
 import useUserTopics from "@/lib/topic/useUserTopics";
 import useUserPosts from "@/lib/post/useUserPosts";
 import useUserComments from "@/lib/comment.ts/useUserComments";
+import useUserStance from "@/lib/topic/useUserStance";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 const StanceIndicator = styled(Slider)(({ theme, value = 40 }) => ({
@@ -72,6 +73,7 @@ const commentTypeToSymbol = {
 
 export default function UserPage({ params }: { params: { userId: string } }) {
   const { data } = useUser(params.userId);
+  const { data: useUserStanceData } = useUserStance(params.userId);
   const { data: userTopicsData } = useUserTopics(params.userId);
   const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(
     params.userId
@@ -83,6 +85,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const userTopics = userTopicsData?.data.topics ?? [];
   const userPosts = userPostsData?.data.posts ?? [];
   const userComments = userCommentsData?.data.comments ?? [];
+  const userTopicStance = useUserStanceData?.data.topics ?? [];
 
   return (
     <Container>
@@ -147,7 +150,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               推文數
             </Typography>
             <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
-              待完成
+              {user?.push_count}
             </Typography>
           </Box>
           <Box sx={{ width: '23%', p: 2, backgroundColor: 'error.main', borderRadius: 2 }}>
@@ -155,7 +158,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               噓文數
             </Typography>
             <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
-              待完成
+              {user?.boo_count}
             </Typography>
           </Box>
         </Box>
@@ -249,19 +252,29 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               <Box
                 sx={{
                   display: "flex",
-                  gap: 6,
+                  gap: 5,
                   flexWrap: "wrap",
                   alignItems: "flex-start",
                 }}
               >
-                {userTopics.map((topic) => (
-                  <Box sx={{ minWidth: 100 }}>
-                    <Typography>{topic.keywords.at(0)?.name}</Typography>
+                {userTopicStance.map((topic) => (
+                  <Box sx={{ minWidth: 140, marginLeft: "22px" }}>
+                    <Typography variant="h5">{topic.name}</Typography>   
                     <StanceIndicator
-                      value={70}
+                      value={topic.score}
                       disabled
                       valueLabelDisplay="on"
-                      marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
+                      marks={[
+                        { 
+                          value: 0, 
+                          label: <Typography sx={{ color: 'black', marginTop: "10px", fontSize: "14px" }}>{topic.stances[0]?.name}</Typography> 
+                        },
+                        { value: 50 },
+                        { 
+                          value: 100, 
+                          label: <Typography sx={{ color: 'black', marginTop: "10px", fontSize: "14px" }}>{topic.stances[1]?.name}</Typography> 
+                        }
+                      ]}
                     />
                   </Box>
                 ))}

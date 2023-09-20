@@ -49,6 +49,14 @@ export interface paths {
     /** Browse Active User */
     get: operations["browse_active_user_active_user_get"];
   };
+  "/topic/{topic_id}/stance": {
+    /** Browse Stances for a Topic */
+    get: operations["browse_topic_stance__topic_id__stance_get"];
+  };
+  "/user/{user_id}/topic_stance": {
+    /** Browse User Stance on Topics */
+    get: operations["browse_user_stance_topic__user_id__topic_stance_get"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -151,6 +159,41 @@ export interface components {
       keywords: components["schemas"]["Keyword"][];
       meta: components["schemas"]["MetaData"];
     };
+    /** TopicStance */
+    TopicStance: {
+      /** Stance ID */
+      stance_id: number;
+      /** Topic ID */
+      topic_id: number;
+      /** Stance Name */
+      name: string;
+      /** Description of the Stance */
+      description: string;
+    };
+    /** TopicStanceOutput */
+    TopicStanceOutput: {
+      /** List of Stances for a Topic */
+      stances: components["schemas"]["TopicStance"][];
+    };
+    /** UserTopicStance */
+    UserTopicStance: {
+      /** Topic Name */
+      name: string;
+      /** Stances in the Topic */
+      stances: {
+        /** Stance Name */
+        name: string;
+        /** Description of the Stance */
+        description: string;
+      }[];
+      /** Score of the Topic */
+      score: number;
+    };
+    /** UserTopicStanceOutput */
+    UserTopicStanceOutput: {
+      /** List of Topics and User's Stances */
+      topics: components["schemas"]["UserTopicStance"][];
+    };
     /**
      * StanceType
      * @enum {string}
@@ -181,6 +224,8 @@ export interface components {
       last_login_date: string;
       /** Last Login Ip */
       last_login_ip: string;
+      push_count: number;
+      boo_count: number;
     };
     /** UserComment */
     UserComment: {
@@ -525,6 +570,50 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["UserWithDataCount"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Browse Stances for a Topic */
+  browse_topic_stance__topic_id__stance_get: {
+    parameters: {
+      path: {
+        topic_id: number;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TopicStanceOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Browse User Stance on Topics */
+  browse_user_stance_topic__user_id__topic_stance_get: {
+    parameters: {
+      path: {
+        user_id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserTopicStanceOutput"];
         };
       };
       /** @description Validation Error */
