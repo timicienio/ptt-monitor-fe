@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import PlaceIcon from "@mui/icons-material/Place";
 import useUser from "@/lib/user/useUser";
 import moment from "moment";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -86,6 +87,8 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const userPosts = userPostsData?.data.posts ?? [];
   const userComments = userCommentsData?.data.comments ?? [];
   const userTopicStance = useUserStanceData?.data.topics ?? [];
+
+  const router = useRouter();
 
   return (
     <Container>
@@ -288,24 +291,27 @@ export default function UserPage({ params }: { params: { userId: string } }) {
             <Box sx={{ mt: 3, width: "100%" }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant="h3">最新發文</Typography>
-                <Button 
-                  sx={{ 
-                    variabt: 'h5',
-                    color: 'info.main',
-                    border: '1px solid',
-                    borderColor: 'info.main',
-                    '&:hover': {
-                      backgroundColor: 'info.light'
-                    }
-                  }}
-                >
-                  全部發文
-                  <KeyboardArrowRightIcon/>
-                </Button>
+                  {userPosts.length > 0 && (
+                    <Button 
+                      sx={{ 
+                        variabt: 'h5',
+                        color: 'info.main',
+                        border: '1px solid',
+                        borderColor: 'info.main',
+                        '&:hover': {
+                          backgroundColor: 'info.light'
+                        }
+                      }}
+                      onClick={() => router.push(`/user/${params.userId}/posts`)}
+                    >
+                      全部發文
+                      <KeyboardArrowRightIcon/>
+                    </Button>
+                  )}
               </Box>
               <List>
                 <Divider />
-                {userPostsIsLoading && (
+                {userPostsIsLoading ? (
                   <Box
                     sx={{
                       height: "300px",
@@ -316,88 +322,91 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                   >
                     <CircularProgress color="inherit" />
                   </Box>
-                )}
-                {userPosts.map((post) => (
-                  <>
-                    <ListItem
-                      key={post.aid}
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <Box>
-                        <Typography
-                          component="a"
-                          sx={{ textDecoration: "none", color: "inherit" }}
-                          href={post.url}
-                        >
-                          {post.title}
-                        </Typography>
-                      </Box>
-                      <Box
+                ) : userPosts.length === 0 ? (
+                    <Typography sx={{ marginTop: "10px" }}>無</Typography>
+                ) : (
+                  userPosts.slice(0, 5).map((post) => (
+                    <>
+                      <ListItem
+                        key={post.aid}
                         sx={{
                           display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
                         }}
                       >
+                        <Box>
+                          <Typography
+                            component="a"
+                            sx={{ textDecoration: "none", color: "inherit" }}
+                            href={post.url}
+                          >
+                            {post.title}
+                          </Typography>
+                        </Box>
                         <Box
                           sx={{
                             display: "flex",
-                            gap: 2,
+                            justifyContent: "space-between",
+                            width: "100%",
                           }}
                         >
-                          <Typography
-                            component="a"
-                            variant="caption"
-                            sx={{ textDecoration: "none", color: "inherit" }}
-                            href={`/user/${post.author}`}
-                          >
-                            {post.author}
-                          </Typography>
-                          <Typography
-                            variant="caption"
+                          <Box
                             sx={{
-                              opacity: 0.6,
+                              display: "flex",
+                              gap: 2,
                             }}
                           >
-                            {post.push + post.boo + post.arrow} 留言
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {post.push} 推
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {post.arrow} →
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {post.boo} 噓
+                            <Typography
+                              component="a"
+                              variant="caption"
+                              sx={{ textDecoration: "none", color: "inherit" }}
+                              href={`/user/${post.author}`}
+                            >
+                              {post.author}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                opacity: 0.6,
+                              }}
+                            >
+                              {post.push + post.boo + post.arrow} 留言
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                opacity: 0.6,
+                              }}
+                            >
+                              {post.push} 推
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                opacity: 0.6,
+                              }}
+                            >
+                              {post.arrow} →
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                opacity: 0.6,
+                              }}
+                            >
+                              {post.boo} 噓
+                            </Typography>
+                          </Box>
+                          <Typography variant="caption">
+                            {moment(post.date).format("M/D YYYY")}
                           </Typography>
                         </Box>
-                        <Typography variant="caption">
-                          {moment(post.date).format("M/D YYYY")}
-                        </Typography>
-                      </Box>
-                    </ListItem>
-                    <Divider />
-                  </>
-                ))}
+                      </ListItem>
+                      <Divider />
+                    </>
+                  ))
+                )}
               </List>
             </Box>
           </Card>
@@ -408,24 +417,27 @@ export default function UserPage({ params }: { params: { userId: string } }) {
             <Box sx={{ mt: 3, width: "100%" }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography variant="h3">最新留言</Typography>
-                <Button 
-                  sx={{ 
-                    variabt: 'h5',
-                    color: 'info.main',
-                    border: '1px solid',
-                    borderColor: 'info.main',
-                    '&:hover': {
-                      backgroundColor: 'info.light'
-                    }
-                  }}
-                >
-                  全部留言
-                  <KeyboardArrowRightIcon/>
-                </Button>
+                {userComments.length > 0 && (
+                  <Button 
+                    sx={{ 
+                      variabt: 'h5',
+                      color: 'info.main',
+                      border: '1px solid',
+                      borderColor: 'info.main',
+                      '&:hover': {
+                        backgroundColor: 'info.light'
+                      }
+                    }}
+                    onClick={() => router.push(`/user/${params.userId}/comments`)}
+                  >
+                    全部留言
+                    <KeyboardArrowRightIcon/>
+                  </Button>
+                )}
               </Box>
               <List>
                 <Divider />
-                {userCommentsIsLoading && (
+                {userCommentsIsLoading ? (
                   <Box
                     sx={{
                       height: "300px",
@@ -436,105 +448,108 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                   >
                     <CircularProgress color="inherit" />
                   </Box>
-                )}
-                {userComments.map((comment, index) => (
-                  <>
-                    <ListItem
-                      key={`${comment.post.aid}-${index}`}
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <Box>
-                        <Typography
-                          component="a"
-                          sx={{ textDecoration: "none", color: "inherit" }}
-                          href={comment.post.url}
-                        >
-                          {comment.post.title}
-                        </Typography>
-                      </Box>
-                      <Box
+                 ) : userComments.length === 0 ? (
+                  <Typography sx={{ marginTop: "10px" }}>無</Typography>
+                ) : (
+                  userComments.slice(0, 5).map((comment, index) => (
+                    <>
+                      <ListItem
+                        key={`${comment.post.aid}-${index}`}
                         sx={{
                           display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
+                          flexDirection: "column",
+                          alignItems: "flex-start",
                         }}
                       >
+                        <Box>
+                          <Typography
+                            component="a"
+                            sx={{ textDecoration: "none", color: "inherit" }}
+                            href={comment.post.url}
+                          >
+                            {comment.post.title}
+                          </Typography>
+                        </Box>
                         <Box
                           sx={{
                             display: "flex",
-                            gap: 2,
+                            justifyContent: "space-between",
+                            width: "100%",
                           }}
                         >
-                          <Typography
-                            component="a"
-                            variant="caption"
-                            sx={{ textDecoration: "none", color: "inherit" }}
-                            href={`/user/${comment.post.author}`}
-                          >
-                            {comment.post.author}
-                          </Typography>
-                          <Typography
-                            variant="caption"
+                          <Box
                             sx={{
-                              opacity: 0.6,
+                              display: "flex",
+                              gap: 2,
                             }}
                           >
-                            {comment.post.push +
-                              comment.post.boo +
-                              comment.post.arrow}{" "}
-                            留言
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {comment.post.push} 推
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {comment.post.arrow} →
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {comment.post.boo} 噓
+                            <Typography
+                              component="a"
+                              variant="caption"
+                              sx={{ textDecoration: "none", color: "inherit" }}
+                              href={`/user/${comment.post.author}`}
+                            >
+                              {comment.post.author}
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                opacity: 0.6,
+                              }}
+                            >
+                              {comment.post.push +
+                                comment.post.boo +
+                                comment.post.arrow}{" "}
+                              留言
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                opacity: 0.6,
+                              }}
+                            >
+                              {comment.post.push} 推
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                opacity: 0.6,
+                              }}
+                            >
+                              {comment.post.arrow} →
+                            </Typography>
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                opacity: 0.6,
+                              }}
+                            >
+                              {comment.post.boo} 噓
+                            </Typography>
+                          </Box>
+                          <Typography variant="caption">
+                            {moment(comment.post.date).format("M/D YYYY")}
                           </Typography>
                         </Box>
-                        <Typography variant="caption">
-                          {moment(comment.post.date).format("M/D YYYY")}
-                        </Typography>
-                      </Box>
-                      <Box sx={{ mt: 0.5 }}>
-                        <Chip
-                          label={
-                            commentTypeToSymbol[
-                              comment.comment.type as "PUSH" | "ARROW" | "BOO"
-                            ]
-                          }
-                          size="small"
-                          variant="outlined"
-                        />
-                        <Typography sx={{ ml: 1 }} variant="caption">
-                          {comment.comment.content}
-                        </Typography>
-                      </Box>
-                    </ListItem>
-                    <Divider />
-                  </>
-                ))}
+                        <Box sx={{ mt: 0.5 }}>
+                          <Chip
+                            label={
+                              commentTypeToSymbol[
+                                comment.comment.type as "PUSH" | "ARROW" | "BOO"
+                              ]
+                            }
+                            size="small"
+                            variant="outlined"
+                          />
+                          <Typography sx={{ ml: 1 }} variant="caption">
+                            {comment.comment.content}
+                          </Typography>
+                        </Box>
+                      </ListItem>
+                      <Divider />
+                    </>
+                  ))
+                )}
               </List>
             </Box>
           </Card>
