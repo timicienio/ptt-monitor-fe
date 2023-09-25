@@ -169,6 +169,8 @@ export interface components {
       name: string;
       /** Description of the Stance */
       description: string;
+      /** User Count of the Stance */
+      user_count: number;
     };
     /** TopicStanceOutput */
     TopicStanceOutput: {

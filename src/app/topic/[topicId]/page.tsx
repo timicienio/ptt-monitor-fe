@@ -12,7 +12,8 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
 
   const topicStance = TopicStance?.data.stances ?? [];;
   const postCount = data?.data.meta.post_count;
-  const stanceRatio = ((postCount?.negative ?? 0) / ((postCount?.negative ?? Infinity) + (postCount?.positive ?? Infinity))) * 100;
+  const articleStanceRatio = ((postCount?.negative ?? 0) / ((postCount?.negative ?? Infinity) + (postCount?.positive ?? Infinity))) * 100;
+  const userStanceRatio = ((topicStance[0]?.user_count ?? 0) / ((topicStance[0]?.user_count ?? Infinity) + (topicStance[1]?.user_count ?? Infinity))) * 100;
 
   return (
     <Container>
@@ -34,6 +35,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
         >
           熱門話題: {data?.data.keywords.at(0)?.name}
         </Typography>
+        {/*
         <Typography sx={{ mt: 1, mr: 1 }}>{postCount?.negative}</Typography>
         <Box
           sx={{
@@ -45,7 +47,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
         >
           <LinearProgress
             variant="determinate"
-            value={stanceRatio}
+            value={articleStanceRatio}
             sx={{
               height: 16,
               border: 1,
@@ -57,6 +59,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
         </Box>
         <Typography sx={{ mt: 1, ml: 1 }}>{postCount?.positive}</Typography>
         <Typography sx={{ mt: 1, ml: 3 }}>共 {postCount?.total} 篇</Typography>
+        */}
       </Box>
       <Card
         elevation={0}
@@ -77,12 +80,12 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
               sx={{
                 display: 'flex',
                 flexDirection: 'row',
-                gap: 3,  // Adjust as needed
+                gap: 3,  
                 alignItems: 'center',
-                ml: 2  // Added this to give some space after the header
+                ml: 2 
               }}
             >
-              <Typography sx={{ mt: 1, mr: 1, margin: 0 }}>{topicStance[0]?.name}：12 人</Typography>
+              <Typography sx={{ mt: 1, mr: 1, margin: 0 }}>{topicStance[0]?.name}：{topicStance[0]?.user_count} 人</Typography>
               <Box
                 sx={{
                   width: "120px",
@@ -94,7 +97,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
               >
                 <LinearProgress
                   variant="determinate"
-                  value={48}
+                  value={userStanceRatio}
                   sx={{
                     height: 16,
                     border: 1,
@@ -104,7 +107,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
                   color="secondary"
                 />
               </Box>
-              <Typography sx={{ mt: 1, ml: 1, margin: 0 }}>{topicStance[1]?.name}：13 人</Typography>
+              <Typography sx={{ mt: 1, ml: 1, margin: 0 }}>{topicStance[1]?.name}：{topicStance[1]?.user_count} 人</Typography>
             </Box>
           )}
         </Box>

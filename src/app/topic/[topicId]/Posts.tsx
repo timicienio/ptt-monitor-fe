@@ -5,7 +5,6 @@ import {
   Box,
   Typography,
   Select,
-  Button,
   MenuItem,
   Pagination,
   CircularProgress,
@@ -42,16 +41,14 @@ export default function Posts({
   };
 
   const { data, isLoading } = useTopicPosts(topicId, {
-    limit: 12,
-    offset: (page - 1) * 12,
     sort: selectedFilterOptionValue,
   });
 
   useEffect(() => {
     if (!isLoading) {
-      setPageCount(ceil((data?.data.total_count ?? -12) / 12));
+      setPageCount(ceil((data?.data.posts.length ?? 0) / 10)); 
     }
-  }, [data, isLoading]);
+  }, [data, isLoading]);  
 
   return (
     <Box>
@@ -111,7 +108,7 @@ export default function Posts({
             <CircularProgress color="inherit" />
           </Box>
         )}
-        {data?.data.posts.map((post) => (
+         {data?.data.posts.slice((page - 1) * 10, page * 10).map((post) => (
           <>
             <ListItem
               key={post.aid}

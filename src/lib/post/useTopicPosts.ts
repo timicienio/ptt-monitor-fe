@@ -13,7 +13,7 @@ export default function useTopicPosts(
 ) {
   const topicPostsSWR = useSWR(
     ["topicPosts", topicId, JSON.stringify(query)],
-    () => browseTopicPosts({ topic_id: topicId, ...query })
+    () => browseTopicPosts({ topic_id: topicId, limit: 100, ...query })
   );
 
   return topicPostsSWR;
