@@ -5,6 +5,8 @@ import { Box, Button, Typography } from "@mui/material";
 import { CirclePacking } from "@nivo/circle-packing";
 import { useRouter } from "next/navigation";
 import { memo, useState } from "react";
+import ButtonSolid from '@/components/ButtonSolid';
+import ButtonHollow from '@/components/ButtonHollow';
 
 function TopicsChart() {
   const { data } = useTopics();
@@ -59,13 +61,11 @@ function TopicsChart() {
           alignItems: "center",
         }}
       >
-        <Button
-          variant="outlined"
-          onClick={() => setZoomedTopicId(null)}
-          disabled={!zoomedTopicId}
-        >
+        <ButtonSolid 
+          onClick={() => setZoomedTopicId(null)} 
+          disabled={!zoomedTopicId}>
           返回全部話題
-        </Button>
+        </ButtonSolid>
         <Typography variant="h5">
           {zoomedTopicId
             ? `熱門話題: ${
@@ -74,13 +74,11 @@ function TopicsChart() {
               }`
             : "全部話題"}
         </Typography>
-        <Button
-          variant="contained"
+        <ButtonHollow 
           onClick={() => router.push(`/topic/${zoomedTopicId}`)}
-          disabled={!zoomedTopicId}
-        >
+          disabled={!zoomedTopicId}>
           話題詳情
-        </Button>
+        </ButtonHollow>
       </Box>
     </Box>
   );

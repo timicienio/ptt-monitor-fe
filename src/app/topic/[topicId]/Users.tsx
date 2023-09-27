@@ -1,23 +1,13 @@
 import {
-  List,
-  ListItem,
-  Divider,
   Box,
   Typography,
-  Select,
-  Button,
-  MenuItem,
-  Pagination,
-  CircularProgress,
 } from "@mui/material";
 import UserList from "./UserList";
 
 export default function Users({
   topicId,
-  toggleMode,
 }: {
   topicId: number;
-  toggleMode: () => void;
 }) {
   return (
     <Box>
@@ -36,11 +26,8 @@ export default function Users({
             gap: 6,
           }}
         >
-          <Typography variant="h5">使用者立場</Typography>
+          <Typography variant="h3">使用者立場</Typography>
         </Box>
-        <Button color="info" onClick={toggleMode}>
-          所有文章
-        </Button>
       </Box>
       <Box
         sx={{

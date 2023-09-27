@@ -5,7 +5,6 @@ import {
   Box,
   Typography,
   Select,
-  Button,
   MenuItem,
   Pagination,
   CircularProgress,
@@ -14,21 +13,16 @@ import useTopicPosts, { TopicPostsSortOption } from "@/lib/post/useTopicPosts";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import ceil from "lodash/ceil";
+import SortIcon from "@mui/icons-material/Sort";
 
 const filterOptions: { value: TopicPostsSortOption; label: string }[] = [
-  { value: "HYBRID", label: "最相關+熱度" },
+  { value: "HYBRID", label: "最佳（最相關 + 熱度）" },
   { value: "RELATIVE", label: "最相關" },
   { value: "POPULAR", label: "熱度" },
   { value: "TIME", label: "時間" },
 ];
 
-export default function Posts({
-  topicId,
-  toggleMode,
-}: {
-  topicId: number;
-  toggleMode: () => void;
-}) {
+export default function Posts({ topicId }: { topicId: number }) {
   const [selectedFilterOptionValue, setSelectedFilterOptionValue] =
     useState<TopicPostsSortOption>("HYBRID");
 
@@ -43,14 +37,14 @@ export default function Posts({
   };
 
   const { data, isLoading } = useTopicPosts(topicId, {
-    limit: 12,
-    offset: (page - 1) * 12,
+    limit: 10,
+    offset: (page - 1) * 10,
     sort: selectedFilterOptionValue,
   });
 
   useEffect(() => {
     if (!isLoading) {
-      setPageCount(ceil((data?.data.total_count ?? -12) / 12));
+      setPageCount(ceil((data?.data.total_count ?? -10) / 10));
     }
   }, [data, isLoading]);
 
@@ -71,7 +65,7 @@ export default function Posts({
             gap: 6,
           }}
         >
-          <Typography variant="h5">所有文章</Typography>
+          <Typography variant="h3">文章列表</Typography>
           <Box
             sx={{
               display: "flex",
@@ -80,8 +74,9 @@ export default function Posts({
               flexDirection: "row",
             }}
           >
-            <Typography variant="body1">排序：</Typography>
+            <SortIcon />
             <Select
+              sx={{ borderRadius: 2 }}
               size="small"
               value={selectedFilterOptionValue}
               onChange={(e) =>
@@ -96,9 +91,6 @@ export default function Posts({
             </Select>
           </Box>
         </Box>
-        <Button color="info" onClick={toggleMode}>
-          使用者立場
-        </Button>
       </Box>
       <List>
         <Divider />

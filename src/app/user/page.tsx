@@ -16,6 +16,7 @@ import { useThrottle } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
 import useActiveUsers from "@/lib/user/useActiveUsers";
 import { ResponsiveCirclePacking } from "@nivo/circle-packing";
+import CustomTextField from '@/components/TextField'; 
 
 export default function UserOverviewPage() {
   const router = useRouter();
@@ -109,10 +110,14 @@ export default function UserOverviewPage() {
               }
               options={users?.data.map((user) => user.id) ?? []}
               renderInput={(params) => (
-                <TextField label="查詢使用者名稱" {...params} size="medium" />
+                <CustomTextField label="查詢使用者名稱" {...params} />
               )}
               sx={{
                 width: 240,
+                '& .MuiAutocomplete-listbox': {
+                  borderRadius: '12px',
+                  borderColor: 'primary.dark'
+                }
               }}
             />
           </Box>
@@ -127,8 +132,8 @@ export default function UserOverviewPage() {
           }}
         >
           <Card
-            elevation={4}
-            sx={{ border: 1, borderRadius: 2, width: "100%", px: 2 }}
+            elevation={0}
+            sx={{ borderRadius: 2, width: "100%", px: 2 }}
           >
             <CardContent
               sx={{
@@ -137,7 +142,7 @@ export default function UserOverviewPage() {
                 height: "100%",
               }}
             >
-              <Typography variant="h5" sx={{ mb: 2 }}>
+              <Typography variant="h3" sx={{ mb: 2 }}>
                 發文活躍使用者
               </Typography>
               <Box
@@ -161,8 +166,8 @@ export default function UserOverviewPage() {
             </CardContent>
           </Card>
           <Card
-            elevation={4}
-            sx={{ border: 1, borderRadius: 2, width: "100%", px: 2 }}
+            elevation={0}
+            sx={{ borderRadius: 2, width: "100%", px: 2 }}
           >
             <CardContent
               sx={{
@@ -171,7 +176,7 @@ export default function UserOverviewPage() {
                 height: "100%",
               }}
             >
-              <Typography variant="h5" sx={{ mb: 2 }}>
+              <Typography variant="h3" sx={{ mb: 2 }}>
                 留言活躍使用者
               </Typography>
               <Box
