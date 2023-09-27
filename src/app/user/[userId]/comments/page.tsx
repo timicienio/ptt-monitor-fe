@@ -4,9 +4,9 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import PlaceIcon from "@mui/icons-material/Place";
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import moment from "moment";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Chip,
@@ -16,7 +16,7 @@ import {
   List,
   ListItem,
   Button,
-  Pagination
+  Pagination,
 } from "@mui/material";
 
 import useUser from "@/lib/user/useUser";
@@ -31,7 +31,7 @@ const commentTypeToSymbol = {
 const UserPostsPage = ({ params }: { params: { userId: string } }) => {
   const { data } = useUser(params.userId);
   const { data: userCommentsData, isLoading: userCommentsIsLoading } =
-    useUserComments(params.userId);
+    useUserComments(params.userId, { limit: 100 });
   const user = data?.data;
   const userComments = userCommentsData?.data.comments ?? [];
 
@@ -40,7 +40,10 @@ const UserPostsPage = ({ params }: { params: { userId: string } }) => {
   const totalComments = userComments.length;
   const totalPages = Math.ceil(totalComments / itemsPerPage);
 
-  const currentComments = userComments.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const currentComments = userComments.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -83,8 +86,8 @@ const UserPostsPage = ({ params }: { params: { userId: string } }) => {
         <Box sx={{ width: "100%" }}>
           <Button
             sx={{
-              backgroundColor: 'transparent',
-              color: 'black',
+              backgroundColor: "transparent",
+              color: "black",
               marginLeft: 0,
               fontSize: 20,
               fontWeight: 700,
@@ -96,140 +99,159 @@ const UserPostsPage = ({ params }: { params: { userId: string } }) => {
           </Button>
         </Box>
         <Card
-            elevation={0}
-            sx={{ borderRadius: 2, width: "100%", px: 2, mt: 2, backgroundColor: 'secondary.contrastText' }}
-          >
-            <Box sx={{ mt: 3, width: "100%" }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h3">全部留言</Typography>
-              </Box>
-              <List>
-                <Divider />
-                {userCommentsIsLoading && (
-                  <Box
+          elevation={0}
+          sx={{
+            borderRadius: 2,
+            width: "100%",
+            px: 2,
+            mt: 2,
+            backgroundColor: "secondary.contrastText",
+          }}
+        >
+          <Box sx={{ mt: 3, width: "100%" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h3">全部留言</Typography>
+            </Box>
+            <List>
+              <Divider />
+              {userCommentsIsLoading && (
+                <Box
+                  sx={{
+                    height: "300px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <CircularProgress color="inherit" />
+                </Box>
+              )}
+              {currentComments.map((comment, index) => (
+                <>
+                  <ListItem
+                    key={`${comment.post.aid}-${index}`}
                     sx={{
-                      height: "300px",
                       display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
                     }}
                   >
-                    <CircularProgress color="inherit" />
-                  </Box>
-                )}
-                {currentComments.map((comment, index) => (
-                  <>
-                    <ListItem
-                      key={`${comment.post.aid}-${index}`}
+                    <Box>
+                      <Typography
+                        component="a"
+                        sx={{ textDecoration: "none", color: "inherit" }}
+                        href={comment.post.url}
+                      >
+                        {comment.post.title}
+                      </Typography>
+                    </Box>
+                    <Box
                       sx={{
                         display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
+                        justifyContent: "space-between",
+                        width: "100%",
                       }}
                     >
-                      <Box>
-                        <Typography
-                          component="a"
-                          sx={{ textDecoration: "none", color: "inherit" }}
-                          href={comment.post.url}
-                        >
-                          {comment.post.title}
-                        </Typography>
-                      </Box>
                       <Box
                         sx={{
                           display: "flex",
-                          justifyContent: "space-between",
-                          width: "100%",
+                          gap: 2,
                         }}
                       >
-                        <Box
+                        <Typography
+                          component="a"
+                          variant="caption"
+                          sx={{ textDecoration: "none", color: "inherit" }}
+                          href={`/user/${comment.post.author}`}
+                        >
+                          {comment.post.author}
+                        </Typography>
+                        <Typography
+                          variant="caption"
                           sx={{
-                            display: "flex",
-                            gap: 2,
+                            opacity: 0.6,
                           }}
                         >
-                          <Typography
-                            component="a"
-                            variant="caption"
-                            sx={{ textDecoration: "none", color: "inherit" }}
-                            href={`/user/${comment.post.author}`}
-                          >
-                            {comment.post.author}
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {comment.post.push +
-                              comment.post.boo +
-                              comment.post.arrow}{" "}
-                            留言
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {comment.post.push} 推
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {comment.post.arrow} →
-                          </Typography>
-                          <Typography
-                            variant="caption"
-                            sx={{
-                              opacity: 0.6,
-                            }}
-                          >
-                            {comment.post.boo} 噓
-                          </Typography>
-                        </Box>
-                        <Typography variant="caption">
-                          {moment(comment.post.date).format("M/D YYYY")}
+                          {comment.post.push +
+                            comment.post.boo +
+                            comment.post.arrow}{" "}
+                          留言
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            opacity: 0.6,
+                          }}
+                        >
+                          {comment.post.push} 推
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            opacity: 0.6,
+                          }}
+                        >
+                          {comment.post.arrow} →
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            opacity: 0.6,
+                          }}
+                        >
+                          {comment.post.boo} 噓
                         </Typography>
                       </Box>
-                      <Box sx={{ mt: 0.5 }}>
-                        <Chip
-                          label={
-                            commentTypeToSymbol[
-                              comment.comment.type as "PUSH" | "ARROW" | "BOO"
-                            ]
-                          }
-                          size="small"
-                          variant="outlined"
-                        />
-                        <Typography sx={{ ml: 1 }} variant="caption">
-                          {comment.comment.content}
-                        </Typography>
-                      </Box>
-                    </ListItem>
-                    <Divider />
-                  </>
-                ))}
-              </List>
-            </Box>
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, marginBottom: "20px" }}>
-                <Pagination 
-                    count={totalPages} 
-                    page={currentPage} 
-                    onChange={(_, page) => setCurrentPage(page)} 
-                    variant="outlined" 
-                    shape="rounded" 
-                />
-            </Box>
-          </Card>
+                      <Typography variant="caption">
+                        {moment(comment.post.date).format("M/D YYYY")}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ mt: 0.5 }}>
+                      <Chip
+                        label={
+                          commentTypeToSymbol[
+                            comment.comment.type as "PUSH" | "ARROW" | "BOO"
+                          ]
+                        }
+                        size="small"
+                        variant="outlined"
+                      />
+                      <Typography sx={{ ml: 1 }} variant="caption">
+                        {comment.comment.content}
+                      </Typography>
+                    </Box>
+                  </ListItem>
+                  <Divider />
+                </>
+              ))}
+            </List>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              mt: 3,
+              marginBottom: "20px",
+            }}
+          >
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={(_, page) => setCurrentPage(page)}
+              variant="outlined"
+              shape="rounded"
+            />
+          </Box>
+        </Card>
       </Box>
     </Container>
   );
-}
+};
 
 export default UserPostsPage;

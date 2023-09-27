@@ -5,6 +5,8 @@ import { Box, Button, Typography } from "@mui/material";
 import { CirclePacking } from "@nivo/circle-packing";
 import { useRouter } from "next/navigation";
 import { memo, useState } from "react";
+import ButtonSolid from '@/components/ButtonSolid';
+import ButtonHollow from '@/components/ButtonHollow';
 
 function TopicsChart() {
   const { data } = useTopics();
@@ -59,32 +61,11 @@ function TopicsChart() {
           alignItems: "center",
         }}
       >
-        <Button
-          variant="outlined"
-          onClick={() => setZoomedTopicId(null)}
-          disabled={!zoomedTopicId}
-          sx={{
-              color: 'info.main',  
-              borderColor: 'info.main',
-              backgroundColor: 'secondary.contrastText',
-              '&:hover': {
-                  color: 'info.main',  
-                  borderColor: 'info.main',
-                  backgroundColor: 'info.light',
-              },
-              '&:active': {
-                  backgroundColor: 'info.light', 
-              },
-              '&:disabled': {
-                  color: 'grey.500',
-                  borderColor: 'grey.500',
-                  backgroundColor: 'primary.light',
-              }
-          }}
-        >
+        <ButtonSolid 
+          onClick={() => setZoomedTopicId(null)} 
+          disabled={!zoomedTopicId}>
           返回全部話題
-        </Button>
-
+        </ButtonSolid>
         <Typography variant="h5">
           {zoomedTopicId
             ? `熱門話題: ${
@@ -93,30 +74,11 @@ function TopicsChart() {
               }`
             : "全部話題"}
         </Typography>
-        <Button
+        <ButtonHollow 
           onClick={() => router.push(`/topic/${zoomedTopicId}`)}
-          disabled={!zoomedTopicId}
-          sx={{
-              color: 'info.light',  
-              borderColor: 'info.main',
-              backgroundColor: 'info.main',
-              '&:hover': {
-                  color: 'info.light',  
-                  borderColor: 'info.dark',
-                  backgroundColor: 'info.dark',
-              },
-              '&:active': {
-                  backgroundColor: 'info.dark', 
-              },
-              '&:disabled': {
-                  color: 'grey.500',
-                  borderColor: 'grey.300',
-                  backgroundColor: 'grey.300',
-              }
-          }}
-        >
+          disabled={!zoomedTopicId}>
           話題詳情
-        </Button>
+        </ButtonHollow>
       </Box>
     </Box>
   );

@@ -23,7 +23,7 @@ import useUserPosts from "@/lib/post/useUserPosts";
 
 const UserPostsPage = ({ params }: { params: { userId: string } }) => {
   const { data } = useUser(params.userId);
-  const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(params.userId);
+  const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(params.userId, {limit: 100});
 
   const user = data?.data;
   const userPosts = userPostsData?.data.posts ?? [];

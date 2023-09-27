@@ -13,7 +13,7 @@ import useTopicPosts, { TopicPostsSortOption } from "@/lib/post/useTopicPosts";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import ceil from "lodash/ceil";
-import SortIcon from '@mui/icons-material/Sort';
+import SortIcon from "@mui/icons-material/Sort";
 
 const filterOptions: { value: TopicPostsSortOption; label: string }[] = [
   { value: "HYBRID", label: "最佳（最相關 + 熱度）" },
@@ -22,11 +22,7 @@ const filterOptions: { value: TopicPostsSortOption; label: string }[] = [
   { value: "TIME", label: "時間" },
 ];
 
-export default function Posts({
-  topicId,
-}: {
-  topicId: number;
-}) {
+export default function Posts({ topicId }: { topicId: number }) {
   const [selectedFilterOptionValue, setSelectedFilterOptionValue] =
     useState<TopicPostsSortOption>("HYBRID");
 
@@ -41,14 +37,16 @@ export default function Posts({
   };
 
   const { data, isLoading } = useTopicPosts(topicId, {
+    limit: 10,
+    offset: (page - 1) * 10,
     sort: selectedFilterOptionValue,
   });
 
   useEffect(() => {
     if (!isLoading) {
-      setPageCount(ceil((data?.data.posts.length ?? 0) / 10)); 
+      setPageCount(ceil((data?.data.total_count ?? -10) / 10));
     }
-  }, [data, isLoading]);  
+  }, [data, isLoading]);
 
   return (
     <Box>
@@ -76,9 +74,9 @@ export default function Posts({
               flexDirection: "row",
             }}
           >
-            <SortIcon/>
+            <SortIcon />
             <Select
-              sx={{ borderRadius: 2, }}
+              sx={{ borderRadius: 2 }}
               size="small"
               value={selectedFilterOptionValue}
               onChange={(e) =>
@@ -108,7 +106,7 @@ export default function Posts({
             <CircularProgress color="inherit" />
           </Box>
         )}
-         {data?.data.posts.slice((page - 1) * 10, page * 10).map((post) => (
+        {data?.data.posts.map((post) => (
           <>
             <ListItem
               key={post.aid}

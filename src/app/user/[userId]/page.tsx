@@ -17,13 +17,13 @@ import {
   ListItem,
   Slider,
   styled,
-  Button
+  Button,
 } from "@mui/material";
 import useUserTopics from "@/lib/topic/useUserTopics";
 import useUserPosts from "@/lib/post/useUserPosts";
 import useUserComments from "@/lib/comment.ts/useUserComments";
 import useUserStance from "@/lib/topic/useUserStance";
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 
 const StanceIndicator = styled(Slider)(({ theme, value = 40 }) => ({
   height: 4,
@@ -31,7 +31,8 @@ const StanceIndicator = styled(Slider)(({ theme, value = 40 }) => ({
   "& .MuiSlider-thumb": {
     height: 28,
     width: 28,
-    backgroundColor: (Array.isArray(value) ? value[0] : value) >= 50 ? "#F49E4C" : "#3B8EA5",
+    backgroundColor:
+      (Array.isArray(value) ? value[0] : value) >= 50 ? "#F49E4C" : "#3B8EA5",
   },
   "& .MuiSlider-valueLabel": {
     fontSize: 12,
@@ -60,6 +61,7 @@ const StanceIndicator = styled(Slider)(({ theme, value = 40 }) => ({
     borderRadius: 5,
     height: 10,
     width: 10,
+    transform: "translate(-5px, -50%)",
     "&.MuiSlider-markActive": {
       opacity: 1,
     },
@@ -77,10 +79,11 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const { data: useUserStanceData } = useUserStance(params.userId);
   const { data: userTopicsData } = useUserTopics(params.userId);
   const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(
-    params.userId
+    params.userId,
+    { limit: 100 }
   );
   const { data: userCommentsData, isLoading: userCommentsIsLoading } =
-    useUserComments(params.userId);
+    useUserComments(params.userId, { limit: 100 });
 
   const user = data?.data;
   const userTopics = userTopicsData?.data.topics ?? [];
@@ -125,47 +128,94 @@ export default function UserPage({ params }: { params: { userId: string } }) {
         <Box
           sx={{
             width: "100%",
-            display: 'flex',
-            justifyContent: 'space-between', 
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            marginBottom: '20px'
+            display: "flex",
+            justifyContent: "stretch",
+            gap: "16px",
+            alignItems: "center",
+            flexWrap: "wrap",
+            marginBottom: "30px",
           }}
         >
-          <Box sx={{ width: '23%', p: 2, backgroundColor: 'secondary.dark', borderRadius: 2 }}>
-            <Typography variant="h5" sx={{ color: 'secondary.contrastText' }}>
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: "secondary.dark",
+              borderRadius: 2,
+              flex: 1,
+            }}
+          >
+            <Typography variant="h5" sx={{ color: "secondary.contrastText" }}>
               總發文
             </Typography>
-            <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
-              {userPosts.length}
+            <Typography
+              variant="h2"
+              sx={{ color: "secondary.contrastText", marginTop: "5px" }}
+            >
+              {user?.legal_post === undefined ? "-" : user?.legal_post}
             </Typography>
           </Box>
-          <Box sx={{ width: '23%', p: 2, backgroundColor: 'secondary.main', borderRadius: 2 }}>
-            <Typography variant="h5" sx={{ color: 'secondary.contrastText' }}>
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: "secondary.main",
+              borderRadius: 2,
+              flex: 1,
+            }}
+          >
+            <Typography variant="h5" sx={{ color: "secondary.contrastText" }}>
               總留言
             </Typography>
-            <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
-              {userComments.length}
+            <Typography
+              variant="h2"
+              sx={{ color: "secondary.contrastText", marginTop: "5px" }}
+            >
+              {user?.push_count === undefined || user?.boo_count === undefined
+                ? "-"
+                : user?.push_count + user?.boo_count}
             </Typography>
           </Box>
-          <Box sx={{ width: '23%', p: 2, backgroundColor: 'secondary.light', borderRadius: 2 }}>
-            <Typography variant="h5" sx={{ color: 'secondary.contrastText' }}>
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: "secondary.light",
+              borderRadius: 2,
+              flex: 1,
+            }}
+          >
+            <Typography variant="h5" sx={{ color: "secondary.contrastText" }}>
               推文數
             </Typography>
-            <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
-              {user?.push_count}
+            <Typography
+              variant="h2"
+              sx={{ color: "secondary.contrastText", marginTop: "5px" }}
+            >
+              {user?.push_count === undefined ? "-" : user.push_count}
             </Typography>
           </Box>
-          <Box sx={{ width: '23%', p: 2, backgroundColor: 'error.main', borderRadius: 2 }}>
-            <Typography variant="h5" sx={{ color: 'secondary.contrastText' }}>
+          <Box
+            sx={{
+              p: 2,
+              backgroundColor: "error.main",
+              borderRadius: 2,
+              flex: 1,
+            }}
+          >
+            <Typography variant="h5" sx={{ color: "secondary.contrastText" }}>
               噓文數
             </Typography>
-            <Typography variant="h2" sx={{ color: 'secondary.contrastText', marginTop: '5px' }}>
-              {user?.boo_count}
+            <Typography
+              variant="h2"
+              sx={{ color: "secondary.contrastText", marginTop: "5px" }}
+            >
+              {user?.boo_count === undefined ? "-" : user.boo_count}
             </Typography>
           </Box>
         </Box>
-        <Box>
+        <Box
+          sx={{
+            width: "100%",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -176,7 +226,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
           >
             <Card
               elevation={0}
-              sx={{ borderRadius: 2, flex: '1 1 calc(50% - 8px)', px: 2 }}
+              sx={{ borderRadius: 2, flex: "1 1 calc(50% - 8px)", px: 2 }}
             >
               <CardContent>
                 <Typography variant="h3" sx={{ mb: 2 }}>
@@ -202,14 +252,14 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-                  <Button 
-                    sx={{ 
-                      width: '100%', 
-                      backgroundColor: 'primary.main', 
-                      color: 'primary.dark',
-                      '&:hover': {
-                        backgroundColor: 'primary.light'
-                      }
+                  <Button
+                    sx={{
+                      width: "100%",
+                      backgroundColor: "primary.main",
+                      color: "primary.dark",
+                      "&:hover": {
+                        backgroundColor: "primary.light",
+                      },
                     }}
                   >
                     群體分析
@@ -219,7 +269,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
             </Card>
             <Card
               elevation={0}
-              sx={{ borderRadius: 2, flex: '1 1 calc(50% - 8px)', px: 2 }} 
+              sx={{ borderRadius: 2, flex: "1 1 calc(50% - 8px)", px: 2 }}
             >
               <CardContent>
                 <Typography variant="h3" sx={{ mb: 2 }}>
@@ -246,7 +296,13 @@ export default function UserPage({ params }: { params: { userId: string } }) {
           </Box>
           <Card
             elevation={0}
-            sx={{ borderRadius: 2, width: "100%", px: 2, mt: 2, backgroundColor: 'secondary.contrastText' }}
+            sx={{
+              borderRadius: 2,
+              width: "100%",
+              px: 2,
+              mt: 2,
+              backgroundColor: "secondary.contrastText",
+            }}
           >
             <CardContent>
               <Typography variant="h3" sx={{ mb: 2 }}>
@@ -261,24 +317,54 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                 }}
               >
                 {userTopicStance.map((topic) => (
-                  <Box sx={{ minWidth: 140, marginLeft: "22px" }}>
-                    <Typography variant="h5">{topic.name}</Typography>   
+                  <Box
+                    sx={{
+                      minWidth: 140,
+                      marginLeft: "22px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      variant="h5"
+                      sx={{ transform: "translateX(-5px)", width: "100%" }}
+                    >
+                      {topic.name}
+                    </Typography>
                     <StanceIndicator
-                      value={topic.score}
+                      value={topic.score ? Math.round(topic.score * 100) : 50}
                       disabled
                       valueLabelDisplay="on"
-                      marks={[
-                        { 
-                          value: 0, 
-                          label: <Typography sx={{ color: 'black', marginTop: "10px", fontSize: "14px" }}>{topic.stances[0]?.name}</Typography> 
-                        },
-                        { value: 50 },
-                        { 
-                          value: 100, 
-                          label: <Typography sx={{ color: 'black', marginTop: "10px", fontSize: "14px" }}>{topic.stances[1]?.name}</Typography> 
-                        }
-                      ]}
+                      marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
                     />
+                    <Box
+                      sx={{
+                        width: "110%",
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          color: "black",
+                          marginTop: "10px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        {topic.stances[0]?.name}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          color: "black",
+                          marginTop: "10px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        {topic.stances[1]?.name}
+                      </Typography>
+                    </Box>
                   </Box>
                 ))}
               </Box>
@@ -286,28 +372,40 @@ export default function UserPage({ params }: { params: { userId: string } }) {
           </Card>
           <Card
             elevation={0}
-            sx={{ borderRadius: 2, width: "100%", px: 2, mt: 2, backgroundColor: 'secondary.contrastText' }}
+            sx={{
+              borderRadius: 2,
+              width: "100%",
+              px: 2,
+              mt: 2,
+              backgroundColor: "secondary.contrastText",
+            }}
           >
             <Box sx={{ mt: 3, width: "100%" }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Typography variant="h3">最新發文</Typography>
-                  {userPosts.length > 0 && (
-                    <Button 
-                      sx={{ 
-                        variabt: 'h5',
-                        color: 'info.main',
-                        border: '1px solid',
-                        borderColor: 'info.main',
-                        '&:hover': {
-                          backgroundColor: 'info.light'
-                        }
-                      }}
-                      onClick={() => router.push(`/user/${params.userId}/posts`)}
-                    >
-                      全部發文
-                      <KeyboardArrowRightIcon/>
-                    </Button>
-                  )}
+                {userPosts.length > 0 && (
+                  <Button
+                    sx={{
+                      variabt: "h5",
+                      color: "info.main",
+                      border: "1px solid",
+                      borderColor: "info.main",
+                      "&:hover": {
+                        backgroundColor: "info.light",
+                      },
+                    }}
+                    onClick={() => router.push(`/user/${params.userId}/posts`)}
+                  >
+                    全部發文
+                    <KeyboardArrowRightIcon />
+                  </Button>
+                )}
               </Box>
               <List>
                 <Divider />
@@ -323,9 +421,9 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                     <CircularProgress color="inherit" />
                   </Box>
                 ) : userPosts.length === 0 ? (
-                    <Typography sx={{ marginTop: "10px" }}>無</Typography>
+                  <Typography sx={{ marginTop: "10px" }}>無</Typography>
                 ) : (
-                  userPosts.slice(0, 5).map((post) => (
+                  userPosts.map((post) => (
                     <>
                       <ListItem
                         key={post.aid}
@@ -412,26 +510,40 @@ export default function UserPage({ params }: { params: { userId: string } }) {
           </Card>
           <Card
             elevation={0}
-            sx={{ borderRadius: 2, width: "100%", px: 2, mt: 2, backgroundColor: 'secondary.contrastText' }}
+            sx={{
+              borderRadius: 2,
+              width: "100%",
+              px: 2,
+              mt: 2,
+              backgroundColor: "secondary.contrastText",
+            }}
           >
             <Box sx={{ mt: 3, width: "100%" }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Typography variant="h3">最新留言</Typography>
                 {userComments.length > 0 && (
-                  <Button 
-                    sx={{ 
-                      variabt: 'h5',
-                      color: 'info.main',
-                      border: '1px solid',
-                      borderColor: 'info.main',
-                      '&:hover': {
-                        backgroundColor: 'info.light'
-                      }
+                  <Button
+                    sx={{
+                      variabt: "h5",
+                      color: "info.main",
+                      border: "1px solid",
+                      borderColor: "info.main",
+                      "&:hover": {
+                        backgroundColor: "info.light",
+                      },
                     }}
-                    onClick={() => router.push(`/user/${params.userId}/comments`)}
+                    onClick={() =>
+                      router.push(`/user/${params.userId}/comments`)
+                    }
                   >
                     全部留言
-                    <KeyboardArrowRightIcon/>
+                    <KeyboardArrowRightIcon />
                   </Button>
                 )}
               </Box>
@@ -448,10 +560,10 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                   >
                     <CircularProgress color="inherit" />
                   </Box>
-                 ) : userComments.length === 0 ? (
+                ) : userComments.length === 0 ? (
                   <Typography sx={{ marginTop: "10px" }}>無</Typography>
                 ) : (
-                  userComments.slice(0, 5).map((comment, index) => (
+                  userComments.map((comment, index) => (
                     <>
                       <ListItem
                         key={`${comment.post.aid}-${index}`}
