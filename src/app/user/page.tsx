@@ -16,6 +16,7 @@ import { useThrottle } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
 import useActiveUsers from "@/lib/user/useActiveUsers";
 import { ResponsiveCirclePacking } from "@nivo/circle-packing";
+import CustomTextField from '@/components/TextField'; 
 
 export default function UserOverviewPage() {
   const router = useRouter();
@@ -109,29 +110,7 @@ export default function UserOverviewPage() {
               }
               options={users?.data.map((user) => user.id) ?? []}
               renderInput={(params) => (
-                <TextField 
-                  label="查詢使用者名稱" 
-                  {...params} 
-                  size="medium"
-                  sx={{
-                    '& .MuiInputBase-root': {
-                        height: '45px',
-                        display: 'flex',
-                        alignItems: 'center', 
-                        borderRadius: '12px',
-                        borderColor: 'primary.dark'
-                    },
-                    '& .MuiInputBase-input': {
-                        padding: '6px 12px',  
-                    },
-                    '& .MuiInputLabel-root': {
-                        transform: 'translate(14px, 12px) scale(1)', 
-                        '&.MuiInputLabel-shrink': {
-                            transform: 'translate(14px, -6px) scale(0.75)',
-                        }
-                    }
-                  }} 
-                />
+                <CustomTextField label="查詢使用者名稱" {...params} />
               )}
               sx={{
                 width: 240,

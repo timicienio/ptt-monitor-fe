@@ -325,7 +325,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                 ) : userPosts.length === 0 ? (
                     <Typography sx={{ marginTop: "10px" }}>無</Typography>
                 ) : (
-                  userPosts.slice(0, 5).map((post) => (
+                  userPosts.map((post) => (
                     <>
                       <ListItem
                         key={post.aid}
@@ -451,7 +451,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                  ) : userComments.length === 0 ? (
                   <Typography sx={{ marginTop: "10px" }}>無</Typography>
                 ) : (
-                  userComments.slice(0, 5).map((comment, index) => (
+                  userComments.map((comment, index) => (
                     <>
                       <ListItem
                         key={`${comment.post.aid}-${index}`}

@@ -22,6 +22,14 @@ const filterOptions: { value: TopicPostsSortOption; label: string }[] = [
   { value: "TIME", label: "時間" },
 ];
 
+const ITEMS_PER_PAGE = 10;
+
+function getPostsForPage(posts: any[], page: number): any[] {
+  const start = (page - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+  return posts.slice(start, end);
+}
+
 export default function Posts({
   topicId,
 }: {
@@ -42,7 +50,10 @@ export default function Posts({
 
   const { data, isLoading } = useTopicPosts(topicId, {
     sort: selectedFilterOptionValue,
+    limit: 100,
   });
+
+  const displayedPosts = getPostsForPage(data?.data.posts || [], page);
 
   useEffect(() => {
     if (!isLoading) {
@@ -108,7 +119,7 @@ export default function Posts({
             <CircularProgress color="inherit" />
           </Box>
         )}
-         {data?.data.posts.slice((page - 1) * 10, page * 10).map((post) => (
+         {displayedPosts.map((post) => (
           <>
             <ListItem
               key={post.aid}
