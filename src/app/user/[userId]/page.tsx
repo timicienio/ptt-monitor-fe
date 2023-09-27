@@ -348,6 +348,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                     >
                       <Typography
                         sx={{
+                          maxWidth: "70px",
                           color: "black",
                           marginTop: "10px",
                           fontSize: "14px",
@@ -357,9 +358,11 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                       </Typography>
                       <Typography
                         sx={{
+                          maxWidth: "70px",
                           color: "black",
                           marginTop: "10px",
                           fontSize: "14px",
+                          textAlign: "right",
                         }}
                       >
                         {topic.stances[1]?.name}
