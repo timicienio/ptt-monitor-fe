@@ -25,9 +25,9 @@ const theme = createTheme({
       contrastText: '#FFFFFF'    // white
     },
     info: {
-      main: '#D2CA73',          // green (active)
-      light: '#FEFDEC',         // light green (hover)
-      dark: '#8E8432'
+      main: '#2D728F',          // blue for button
+      light: '#D7F8F9',         // light blue for buton
+      dark: '#164466'           // dark blue for button
     },
     error: {
       main: '#AB3428',          // red
