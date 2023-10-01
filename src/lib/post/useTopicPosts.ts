@@ -9,13 +9,11 @@ export default function useTopicPosts(
     limit?: number;
     offset?: number;
     sort?: TopicPostsSortOption;
-  } = {} 
+  } = { limit: 12 }
 ) {
-  const { limit = 12, offset, sort } = query; // without specifying a limit, it will fetch with a limit of 12
-  
   const topicPostsSWR = useSWR(
     ["topicPosts", topicId, JSON.stringify(query)],
-    () => browseTopicPosts({ topic_id: topicId, limit, offset, sort }) // allows to custom limit, offset and sort
+    () => browseTopicPosts({ topic_id: topicId, ...query })
   );
 
   return topicPostsSWR;
