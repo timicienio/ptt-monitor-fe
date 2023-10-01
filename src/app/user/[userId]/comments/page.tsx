@@ -30,8 +30,7 @@ const commentTypeToSymbol = {
 
 const UserPostsPage = ({ params }: { params: { userId: string } }) => {
   const { data } = useUser(params.userId);
-  const { data: userCommentsData, isLoading: userCommentsIsLoading } =
-    useUserComments(params.userId, { limit: 100 });
+  const { data: userCommentsData, isLoading: userCommentsIsLoading } = useUserComments(params.userId, 100);
   const user = data?.data;
   const userComments = userCommentsData?.data.comments ?? [];
 

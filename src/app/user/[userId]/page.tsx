@@ -78,12 +78,9 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const { data } = useUser(params.userId);
   const { data: useUserStanceData } = useUserStance(params.userId);
   const { data: userTopicsData } = useUserTopics(params.userId);
-  const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(
-    params.userId,
-    { limit: 100 }
-  );
+  const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(params.userId);
   const { data: userCommentsData, isLoading: userCommentsIsLoading } =
-    useUserComments(params.userId, { limit: 100 });
+    useUserComments(params.userId);
 
   const user = data?.data;
   const userTopics = userTopicsData?.data.topics ?? [];
