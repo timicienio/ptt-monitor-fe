@@ -9,6 +9,14 @@ export interface paths {
     /** Default Page */
     get: operations["default_page__get"];
   };
+  "/stance": {
+    /** Add Stance */
+    post: operations["add_stance_stance_post"];
+  };
+  "/stance/{stance_id}/user-post": {
+    /** Add User Post Stance */
+    post: operations["add_user_post_stance_stance__stance_id__user_post_post"];
+  };
   "/topic": {
     /** Browse Topic */
     get: operations["browse_topic_topic_get"];
@@ -24,6 +32,10 @@ export interface paths {
   "/topic/{topic_id}/user": {
     /** Browse Users In Topic */
     get: operations["browse_users_in_topic_topic__topic_id__user_get"];
+  };
+  "/topic/{topic_id}/stance": {
+    /** Get Topic Stance */
+    get: operations["get_topic_stance_topic__topic_id__stance_get"];
   };
   "/user/{user_id}": {
     /** Read User Info */
@@ -49,13 +61,25 @@ export interface paths {
     /** Browse Active User */
     get: operations["browse_active_user_active_user_get"];
   };
-  "/topic/{topic_id}/stance": {
-    /** Browse Stances for a Topic */
-    get: operations["browse_topic_stance__topic_id__stance_get"];
-  };
   "/user/{user_id}/topic_stance": {
-    /** Browse User Stance on Topics */
-    get: operations["browse_user_stance_topic__user_id__topic_stance_get"];
+    /** Get User Topic Stance */
+    get: operations["get_user_topic_stance_user__user_id__topic_stance_get"];
+  };
+  "/user-graph": {
+    /** Browse User Graph */
+    get: operations["browse_user_graph_user_graph_get"];
+  };
+  "/user-graph/neighbor": {
+    /** Read User Neighbor */
+    get: operations["read_user_neighbor_user_graph_neighbor_get"];
+  };
+  "/user-group/{group_id}": {
+    /** Read User Group */
+    get: operations["read_user_group_user_group__group_id__get"];
+  };
+  "/user-group/{group_id}/user-graph": {
+    /** Read User Graph By Group Id */
+    get: operations["read_user_graph_by_group_id_user_group__group_id__user_graph_get"];
   };
 }
 
@@ -68,6 +92,27 @@ export interface components {
      * @enum {string}
      */
     ActiveUserType: "POST" | "COMMENT";
+    /** AddStanceInput */
+    AddStanceInput: {
+      /** Topic Id */
+      topic_id: number;
+      /** Name */
+      name: string;
+      /** Description */
+      description: string;
+    };
+    /** AddStanceOutput */
+    AddStanceOutput: {
+      /** Id */
+      id: number;
+    };
+    /** AddUserPostStanceInput */
+    AddUserPostStanceInput: {
+      /** User Id */
+      user_id: string;
+      /** Post Id */
+      post_id: string;
+    };
     /**
      * BrowsePostsInTopicSort
      * @enum {string}
@@ -119,10 +164,20 @@ export interface components {
       /** Posts */
       posts: components["schemas"]["UserPost"][];
     };
+    /** GetTopicStanceOutput */
+    GetTopicStanceOutput: {
+      /** Stances */
+      stances: components["schemas"]["TopicStanceWithUserCount"][];
+    };
     /** GetUserPostsOutput */
     GetUserPostsOutput: {
       /** Posts */
       posts: components["schemas"]["UserPost"][];
+    };
+    /** GetUserTopicStanceOutput */
+    GetUserTopicStanceOutput: {
+      /** Topics */
+      topics: components["schemas"]["TopicOutput"][];
     };
     /** HTTPValidationError */
     HTTPValidationError: {
@@ -159,48 +214,99 @@ export interface components {
       keywords: components["schemas"]["Keyword"][];
       meta: components["schemas"]["MetaData"];
     };
-    /** TopicStance */
-    TopicStance: {
-      /** Stance ID */
-      stance_id: number;
-      /** Topic ID */
-      topic_id: number;
-      /** Stance Name */
+    /** ReadUserGraphByGroupIdOutput */
+    ReadUserGraphByGroupIdOutput: {
+      /** User Graph */
+      user_graph: components["schemas"]["UserGraph"][];
+      /** User Group */
+      user_group: components["schemas"]["UserGroup"][];
+    };
+    /** ReadUserNeighborOutput */
+    ReadUserNeighborOutput: {
+      /** User Id */
+      user_id: string;
+      count: components["schemas"]["MetaCount"];
+    };
+    /** ReadUserOutput */
+    ReadUserOutput: {
+      /** Id */
+      id: string;
+      /**
+       * Post Count
+       * @default 0
+       */
+      post_count: number;
+      /**
+       * Comment Count
+       * @default 0
+       */
+      comment_count: number;
+      /**
+       * Push Count
+       * @default 0
+       */
+      push_count: number;
+      /**
+       * Boo Count
+       * @default 0
+       */
+      boo_count: number;
+      /** Money */
+      money: string;
+      /** Login Count */
+      login_count: number;
+      /** Verified */
+      verified: boolean;
+      /** Legal Post */
+      legal_post: number;
+      /** Illegal Post */
+      illegal_post: number;
+      /** Activity */
+      activity: string;
+      /** Mail */
+      mail: string;
+      /**
+       * Last Login Date
+       * Format: date-time
+       */
+      last_login_date: string;
+      /** Last Login Ip */
+      last_login_ip: string;
+    };
+    /** StanceOutput */
+    StanceOutput: {
+      /** Name */
       name: string;
-      /** Description of the Stance */
+      /** Description */
       description: string;
-      /** User Count of the Stance */
-      user_count: number;
-    };
-    /** TopicStanceOutput */
-    TopicStanceOutput: {
-      /** List of Stances for a Topic */
-      stances: components["schemas"]["TopicStance"][];
-    };
-    /** UserTopicStance */
-    UserTopicStance: {
-      /** Topic Name */
-      name: string;
-      /** Stances in the Topic */
-      stances: {
-        /** Stance Name */
-        name: string;
-        /** Description of the Stance */
-        description: string;
-      }[];
-      /** Score of the Topic */
-      score: number;
-    };
-    /** UserTopicStanceOutput */
-    UserTopicStanceOutput: {
-      /** List of Topics and User's Stances */
-      topics: components["schemas"]["UserTopicStance"][];
     };
     /**
      * StanceType
      * @enum {string}
      */
     StanceType: "POSITIVE" | "NEGATIVE" | "ALL";
+    /** TopicOutput */
+    TopicOutput: {
+      /** Name */
+      name: string;
+      /** Stances */
+      stances: components["schemas"]["StanceOutput"][];
+      /** Score */
+      score: number | null;
+    };
+    /** TopicStanceWithUserCount */
+    TopicStanceWithUserCount: {
+      /** Stance Id */
+      stance_id: number;
+      /** Topic Id */
+      topic_id: number;
+      /** Name */
+      name: string;
+      /** Description */
+      description: string;
+      /** User Count */
+      user_count: number;
+    };
     /** User */
     User: {
       /** Id */
@@ -226,8 +332,6 @@ export interface components {
       last_login_date: string;
       /** Last Login Ip */
       last_login_ip: string;
-      push_count: number;
-      boo_count: number;
     };
     /** UserComment */
     UserComment: {
@@ -242,6 +346,54 @@ export interface components {
       time: string;
       /** Content */
       content: string;
+    };
+    /** UserGraph */
+    UserGraph: {
+      /** User Id 1 */
+      user_id_1: string;
+      /** User Id 2 */
+      user_id_2: string;
+      /** Weight */
+      weight: number;
+    };
+    /** UserGroup */
+    UserGroup: {
+      /** Group Id */
+      group_id: number;
+      /** User Id */
+      user_id: string;
+    };
+    /** UserGroupOutput */
+    UserGroupOutputOutput: {
+      /**
+       * Id
+       * @default
+       */
+      id: string;
+      /**
+       * Post Count
+       * @default 0
+       */
+      post_count: number;
+      /**
+       * Comment Count
+       * @default 0
+       */
+      comment_count: number;
+      /**
+       * Push Count
+       * @default 0
+       */
+      push_count: number;
+      /**
+       * Boo Count
+       * @default 0
+       */
+      boo_count: number;
+      /** Group Id */
+      group_id: number;
+      /** User Id */
+      user_id: string;
     };
     /** UserPost */
     UserPost: {
@@ -273,7 +425,8 @@ export interface components {
       post_count: number;
       /** Comment Count */
       comment_count: number;
-      stance: components["schemas"]["StanceType"];
+      /** Stance */
+      stance: number;
     };
     /** UserWithDataCount */
     UserWithDataCount: {
@@ -338,6 +491,63 @@ export interface operations {
       200: {
         content: {
           "text/html": string;
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Add Stance */
+  add_stance_stance_post: {
+    parameters: {
+      header?: {
+        user?: string;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddStanceInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["AddStanceOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Add User Post Stance */
+  add_user_post_stance_stance__stance_id__user_post_post: {
+    parameters: {
+      header?: {
+        user?: string;
+      };
+      path: {
+        stance_id: number;
+      };
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AddUserPostStanceInput"];
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": unknown;
         };
       };
       /** @description Validation Error */
@@ -436,6 +646,28 @@ export interface operations {
       };
     };
   };
+  /** Get Topic Stance */
+  get_topic_stance_topic__topic_id__stance_get: {
+    parameters: {
+      path: {
+        topic_id: number;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["GetTopicStanceOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   /** Read User Info */
   read_user_info_user__user_id__get: {
     parameters: {
@@ -447,7 +679,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["User"];
+          "application/json": components["schemas"]["ReadUserOutput"];
         };
       };
       /** @description Validation Error */
@@ -582,18 +814,18 @@ export interface operations {
       };
     };
   };
-  /** Browse Stances for a Topic */
-  browse_topic_stance__topic_id__stance_get: {
+  /** Get User Topic Stance */
+  get_user_topic_stance_user__user_id__topic_stance_get: {
     parameters: {
       path: {
-        topic_id: number;
+        user_id: string;
       };
     };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["TopicStanceOutput"];
+          "application/json": components["schemas"]["GetUserTopicStanceOutput"];
         };
       };
       /** @description Validation Error */
@@ -604,10 +836,21 @@ export interface operations {
       };
     };
   };
-  /** Browse User Stance on Topics */
-  browse_user_stance_topic__user_id__topic_stance_get: {
+  /** Browse User Graph */
+  browse_user_graph_user_graph_get: {
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ReadUserGraphByGroupIdOutput"];
+        };
+      };
+    };
+  };
+  /** Read User Neighbor */
+  read_user_neighbor_user_graph_neighbor_get: {
     parameters: {
-      path: {
+      query: {
         user_id: string;
       };
     };
@@ -615,7 +858,51 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["UserTopicStanceOutput"];
+          "application/json": components["schemas"]["ReadUserNeighborOutput"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Read User Group */
+  read_user_group_user_group__group_id__get: {
+    parameters: {
+      path: {
+        group_id: number;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserGroupOutputOutput"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Read User Graph By Group Id */
+  read_user_graph_by_group_id_user_group__group_id__user_graph_get: {
+    parameters: {
+      path: {
+        group_id: number;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["ReadUserGraphByGroupIdOutput"];
         };
       };
       /** @description Validation Error */
