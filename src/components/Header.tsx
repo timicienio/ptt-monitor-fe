@@ -1,8 +1,9 @@
 import { AppBar, Toolbar, Typography, Box, Tab, Tabs } from "@mui/material";
 
 const navItems = [
-  { text: "熱門話題分類", href: "/topic", disabled: false },
-  { text: "使用者查詢", href: "/user", disabled: false },
+  { text: "熱門話題", href: "/topic", disabled: false },
+  { text: "使用者", href: "/user", disabled: false },
+  { text: "使用者群體", href: "/user-group", disabled: false },
   { text: "PTT 網頁版", href: "https://www.pttweb.cc/", disabled: false },
 ];
 
@@ -25,7 +26,7 @@ export default function Header() {
         >
           PTT Monitor
         </Typography>
-        <Box sx={{ display: { sm: "flex" }, gap: 3, mr: 5, height: '100%' }}>
+        <Box sx={{ display: { sm: "flex" }, gap: 3, mr: 5, height: "100%" }}>
           <Tabs>
             {navItems.map((item, index) => (
               <Tab
@@ -36,10 +37,10 @@ export default function Header() {
                 disabled={item.disabled}
                 sx={{
                   color: "secondary.contrastText",
-                  '&:hover': {
+                  "&:hover": {
                     color: "primary.dark",
                     backgroundColor: "secondary.contrastText",
-                  }
+                  },
                 }}
               />
             ))}
