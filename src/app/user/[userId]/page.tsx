@@ -7,6 +7,9 @@ import PlaceIcon from "@mui/icons-material/Place";
 import useUser from "@/lib/user/useUser";
 import moment from "moment";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useThrottle } from "@uidotdev/usehooks";
+import CustomTextField from '@/components/TextField';
 import {
   Card,
   CardContent,
@@ -18,7 +21,9 @@ import {
   Slider,
   styled,
   Button,
+  Autocomplete
 } from "@mui/material";
+import useUsers from "@/lib/user/useUsers";
 import useUserTopics from "@/lib/topic/useUserTopics";
 import useUserPosts from "@/lib/post/useUserPosts";
 import useUserComments from "@/lib/comment.ts/useUserComments";
@@ -75,6 +80,18 @@ const commentTypeToSymbol = {
 };
 
 export default function UserPage({ params }: { params: { userId: string } }) {
+  const router = useRouter();
+
+  const [searchValue, setSearchValue] = useState<string | null>(null);
+  const [searchInputValue, setSearchInputValue] = useState("");
+
+  const throttledSearchInputValue = useThrottle(searchInputValue, 500);
+
+  const { data: users } = useUsers({
+    limit: 20,
+    userId: throttledSearchInputValue,
+  });
+
   const { data } = useUser(params.userId);
   const { data: useUserStanceData } = useUserStance(params.userId);
   const { data: userTopicsData } = useUserTopics(params.userId);
@@ -88,7 +105,15 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const userComments = userCommentsData?.data.comments ?? [];
   const userTopicStance = useUserStanceData?.data.topics ?? [];
 
-  const router = useRouter();
+  useEffect(
+    /** Go to user page when search value is set. */
+    () => {
+      if (searchValue && searchValue !== "") {
+        router.push(`/user/${searchValue}`);
+      }
+    },
+    [searchValue]
+  );
 
   return (
     <Container>
@@ -102,24 +127,63 @@ export default function UserPage({ params }: { params: { userId: string } }) {
           pt: 2,
         }}
       >
-        <Box sx={{ width: "100%", mb: 4 }}>
-          <Typography variant="h2" gutterBottom sx={{ width: "100%" }}>
-            使用者 / {user?.id}
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
+        <Box 
+          sx={{ 
+            display: 'flex', 
+            width: "100%",
+            justifyContent: 'space-between',
+            mb: 4,
+          }}
+        >
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              flexDirection: 'column',
             }}
           >
-            <Typography variant="caption">
-              最後登入：
-              {user &&
-                moment(user?.last_login_date).format("YYYY/MM/DD HH:DD:ss")}
+            <Typography 
+              variant="h2" 
+              gutterBottom 
+            >
+              使用者 / {user?.id}
             </Typography>
-            <PlaceIcon sx={{ height: "16px", ml: 2 }} />
-            <Typography variant="caption">{user?.last_login_ip}</Typography>
-            {/* TODO: Last login country */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="caption">
+                最後登入：
+                {user &&
+                  moment(user?.last_login_date).format("YYYY/MM/DD HH:DD:ss")}
+              </Typography>
+              <PlaceIcon sx={{ height: "16px", ml: 2 }} />
+              <Typography variant="caption">{user?.last_login_ip}</Typography>
+              {/* TODO: Last login country */}
+            </Box>
+          </Box>
+          <Box >
+            <Autocomplete
+              id="user-search"
+              value={searchValue}
+              onChange={(_, newValue) => setSearchValue(newValue)}
+              inputValue={searchInputValue}
+              onInputChange={(_, newInputValue) =>
+                  setSearchInputValue(newInputValue)
+              }
+              options={users?.data.map((user) => user.id) ?? []}
+              renderInput={(params) => (
+                  <CustomTextField label="查詢使用者名稱" {...params} />
+              )}
+              sx={{
+                width: 240,
+                '& .MuiAutocomplete-listbox': {
+                    borderRadius: '12px',
+                    borderColor: 'primary.dark'
+                }
+              }}
+            />
           </Box>
         </Box>
         <Box
