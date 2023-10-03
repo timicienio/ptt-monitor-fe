@@ -1,13 +1,17 @@
 import { Slider, styled } from "@mui/material";
 
-const StanceIndicator = styled(Slider)(({ theme, value = 40 }) => ({
+const StanceIndicator = styled(Slider)(({ theme, value = 50 }) => ({
   height: 4,
   padding: "15px 0",
   "& .MuiSlider-thumb": {
     height: 28,
     width: 28,
     backgroundColor:
-      (Array.isArray(value) ? value[0] : value) >= 50 ? "#F49E4C" : "#3B8EA5",
+      (Array.isArray(value) ? value[0] : value) == 50
+        ? "#FFFFFF"
+        : (Array.isArray(value) ? value[0] : value) > 50
+        ? "#F49E4C"
+        : "#3B8EA5",
   },
   "& .MuiSlider-valueLabel": {
     fontSize: 12,

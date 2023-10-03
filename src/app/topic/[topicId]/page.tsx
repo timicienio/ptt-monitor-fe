@@ -46,7 +46,8 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
           textAlign={"left"}
           sx={{ flexShrink: 0, mr: 3 }}
         >
-          熱門話題: {data?.data.keywords.at(0)?.name}
+          熱門話題: {data?.data.keywords.at(0)?.name},{" "}
+          {data?.data.keywords.at(1)?.name}
         </Typography>
         {/*
         <Typography sx={{ mt: 1, mr: 1 }}>{postCount?.negative}</Typography>
@@ -153,14 +154,14 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
               <Box
                 sx={{
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: "start",
                   gap: 1,
                 }}
               >
-                <Typography sx={{ minWidth: "80px" }}>
+                <Typography sx={{ minWidth: "64px", fontWeight: "bold" }}>
                   {topicStance[0]?.name}
                 </Typography>
-                <Typography sx={{ fontSize: "25px" }}>-</Typography>
+                <Typography sx={{}}>-</Typography>
                 <Typography>{topicStance[0]?.description}</Typography>
               </Box>
 
@@ -168,14 +169,14 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
                 <Box
                   sx={{
                     display: "flex",
-                    alignItems: "center",
+                    alignItems: "start",
                     gap: 1,
                   }}
                 >
-                  <Typography sx={{ minWidth: "80px" }}>
+                  <Typography sx={{ minWidth: "64px", fontWeight: "bold" }}>
                     {topicStance[1]?.name}
                   </Typography>
-                  <Typography sx={{ fontSize: "25px" }}>-</Typography>
+                  <Typography sx={{}}>-</Typography>
                   <Typography>{topicStance[1]?.description}</Typography>
                 </Box>
               )}

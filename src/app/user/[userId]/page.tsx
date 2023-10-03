@@ -9,7 +9,7 @@ import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useThrottle } from "@uidotdev/usehooks";
-import CustomTextField from '@/components/TextField';
+import CustomTextField from "@/components/TextField";
 import {
   Card,
   CardContent,
@@ -21,7 +21,7 @@ import {
   Slider,
   styled,
   Button,
-  Autocomplete
+  Autocomplete,
 } from "@mui/material";
 import useUsers from "@/lib/user/useUsers";
 import useUserTopics from "@/lib/topic/useUserTopics";
@@ -54,7 +54,9 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const { data } = useUser(params.userId);
   const { data: useUserStanceData } = useUserStance(params.userId);
   const { data: userTopicsData } = useUserTopics(params.userId);
-  const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(params.userId);
+  const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(
+    params.userId
+  );
   const { data: userCommentsData, isLoading: userCommentsIsLoading } =
     useUserComments(params.userId);
 
@@ -86,24 +88,21 @@ export default function UserPage({ params }: { params: { userId: string } }) {
           pt: 2,
         }}
       >
-        <Box 
-          sx={{ 
-            display: 'flex', 
+        <Box
+          sx={{
+            display: "flex",
             width: "100%",
-            justifyContent: 'space-between',
+            justifyContent: "space-between",
             mb: 4,
           }}
         >
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              flexDirection: 'column',
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <Typography 
-              variant="h2" 
-              gutterBottom 
-            >
+            <Typography variant="h2" gutterBottom>
               使用者 / {user?.id}
             </Typography>
             <Box
@@ -122,25 +121,25 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               {/* TODO: Last login country */}
             </Box>
           </Box>
-          <Box >
+          <Box>
             <Autocomplete
               id="user-search"
               value={searchValue}
               onChange={(_, newValue) => setSearchValue(newValue)}
               inputValue={searchInputValue}
               onInputChange={(_, newInputValue) =>
-                  setSearchInputValue(newInputValue)
+                setSearchInputValue(newInputValue)
               }
               options={users?.data.map((user) => user.id) ?? []}
               renderInput={(params) => (
-                  <CustomTextField label="查詢使用者名稱" {...params} />
+                <CustomTextField label="查詢使用者名稱" {...params} />
               )}
               sx={{
                 width: 240,
-                '& .MuiAutocomplete-listbox': {
-                    borderRadius: '12px',
-                    borderColor: 'primary.dark'
-                }
+                "& .MuiAutocomplete-listbox": {
+                  borderRadius: "12px",
+                  borderColor: "primary.dark",
+                },
               }}
             />
           </Box>
@@ -307,7 +306,9 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                       variant="outlined"
                       component="a"
                       href={`/topic/${topic.id}`}
-                      label={topic.keywords.at(0)?.name}
+                      label={`${topic.keywords.at(0)?.name}, ${
+                        topic.keywords.at(1)?.name
+                      }`}
                     />
                   ))}
                 </Box>
@@ -336,60 +337,63 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                   alignItems: "flex-start",
                 }}
               >
-                {userTopicStance.map((topic) => (
-                  <Box
-                    sx={{
-                      minWidth: 140,
-                      marginLeft: "22px",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Typography
-                      variant="h5"
-                      sx={{ transform: "translateX(-5px)", width: "100%" }}
-                    >
-                      {topic.name}
-                    </Typography>
-                    <StanceIndicator
-                      value={topic.score ? Math.round(topic.score * 100) : 50}
-                      disabled
-                      valueLabelDisplay="on"
-                      marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
-                    />
+                {userTopicStance
+                  .filter((topic) => topic.score !== null)
+                  .map((topic) => (
                     <Box
                       sx={{
-                        width: "110%",
+                        minWidth: 140,
+                        marginLeft: "22px",
                         display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
+                        flexDirection: "column",
+                        alignItems: "center",
                       }}
                     >
                       <Typography
+                        variant="h5"
+                        sx={{ transform: "translateX(-5px)", width: "100%" }}
+                      >
+                        {topic.name}
+                      </Typography>
+                      <StanceIndicator
+                        value={Math.round((topic.score as number) * 100)}
+                        disabled
+                        valueLabelDisplay="on"
+                        valueLabelFormat={(value) => Math.abs(value - 50)}
+                        marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
+                      />
+                      <Box
                         sx={{
-                          maxWidth: "70px",
-                          color: "black",
-                          marginTop: "10px",
-                          fontSize: "14px",
+                          width: "110%",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
                         }}
                       >
-                        {topic.stances[0]?.name}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          maxWidth: "70px",
-                          color: "black",
-                          marginTop: "10px",
-                          fontSize: "14px",
-                          textAlign: "right",
-                        }}
-                      >
-                        {topic.stances[1]?.name}
-                      </Typography>
+                        <Typography
+                          sx={{
+                            maxWidth: "70px",
+                            color: "black",
+                            marginTop: "10px",
+                            fontSize: "14px",
+                          }}
+                        >
+                          {topic.stances[0]?.name}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            maxWidth: "70px",
+                            color: "black",
+                            marginTop: "10px",
+                            fontSize: "14px",
+                            textAlign: "right",
+                          }}
+                        >
+                          {topic.stances[1]?.name}
+                        </Typography>
+                      </Box>
                     </Box>
-                  </Box>
-                ))}
+                  ))}
               </Box>
             </CardContent>
           </Card>
