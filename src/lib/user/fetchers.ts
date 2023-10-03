@@ -12,4 +12,9 @@ export const browseTopicUsers = api
   .method("get")
   .create();
 
+export const browseUserGroup = api
+  .path("/user/{user_id}/user-group")
+  .method("get")
+  .create();
+
 export const readUser = api.path("/user/{user_id}").method("get").create();

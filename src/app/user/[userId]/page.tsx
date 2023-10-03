@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import PlaceIcon from "@mui/icons-material/Place";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import useUser from "@/lib/user/useUser";
 import moment from "moment";
 import { useRouter } from "next/navigation";
@@ -18,8 +19,6 @@ import {
   Divider,
   List,
   ListItem,
-  Slider,
-  styled,
   Button,
   Autocomplete,
 } from "@mui/material";
@@ -29,7 +28,7 @@ import useUserPosts from "@/lib/post/useUserPosts";
 import useUserComments from "@/lib/comment.ts/useUserComments";
 import useUserStance from "@/lib/topic/useUserStance";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-
+import useUserGroup from "@/lib/user/useUserGroup";
 import StanceIndicator from "@/components/StanceIndicator";
 
 const commentTypeToSymbol = {
@@ -59,12 +58,14 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   );
   const { data: userCommentsData, isLoading: userCommentsIsLoading } =
     useUserComments(params.userId);
+  const { data: userGroupData } = useUserGroup(params.userId);
 
   const user = data?.data;
   const userTopics = userTopicsData?.data.topics ?? [];
   const userPosts = userPostsData?.data.posts ?? [];
   const userComments = userCommentsData?.data.comments ?? [];
   const userTopicStance = useUserStanceData?.data.topics ?? [];
+  const userGroup = userGroupData?.data;
 
   useEffect(
     /** Go to user page when search value is set. */
@@ -280,29 +281,92 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         backgroundColor: "primary.light",
                       },
                     }}
+                    onClick={() => router.push(`https://www.pttweb.cc/user/${params.userId}`)}
                   >
-                    群體分析
+                    使用者詳細資訊
+                    <OpenInNewIcon sx={{ marginLeft: "4px" }}/>
                   </Button>
                 </Box>
               </CardContent>
             </Card>
             <Card
               elevation={0}
-              sx={{ borderRadius: 2, flex: "1 1 calc(50% - 8px)", px: 2 }}
+              sx={{ 
+                borderRadius: 2, 
+                flex: "1 1 calc(50% - 8px)", 
+                px: 2,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
             >
-              <CardContent>
-                <Typography variant="h3" sx={{ mb: 2 }}>
-                  最近參與的話題
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: 1,
-                    flexWrap: "wrap",
+              <CardContent 
+                sx={{ 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  flexGrow: 1 
                   }}
-                >
-                  {userTopics.map((topic) => (
+              >
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="h3" sx={{ mb: 2 }}>
+                    使用者所屬群體
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: 1,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <Typography>
+                      {userGroup?.group_id ? userGroup?.group_id : "無"}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                  <Button
+                    sx={{
+                      width: "100%",
+                      backgroundColor: "primary.main",
+                      color: "primary.dark",
+                      "&:hover": {
+                        backgroundColor: "primary.light",
+                      },
+                    }}
+                    onClick={() =>
+                      router.push('/user-group')
+                    }
+                  >
+                    查看使用者群體
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Box>
+          <Card
+            elevation={0}
+            sx={{
+              borderRadius: 2,
+              width: "100%",
+              px: 2,
+              mt: 2,
+              backgroundColor: "secondary.contrastText",
+            }}
+          >
+            <CardContent>
+              <Typography variant="h3" sx={{ mb: 2 }}>
+                最近參與的話題
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 1,
+                  flexWrap: "wrap",
+                }}
+              >
+                {userTopics && userTopics.length > 0 ? (
+                  userTopics.map((topic) => (
                     <Chip
+                      key={topic.id} // Remember to use a key when mapping in React
                       variant="outlined"
                       component="a"
                       href={`/topic/${topic.id}`}
@@ -310,11 +374,13 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         topic.keywords.at(1)?.name
                       }`}
                     />
-                  ))}
-                </Box>
-              </CardContent>
-            </Card>
-          </Box>
+                  ))
+                ) : (
+                  <Typography sx={{ marginTop: "5px" }}>無</Typography>
+                )}
+              </Box>
+            </CardContent>
+          </Card>
           <Card
             elevation={0}
             sx={{

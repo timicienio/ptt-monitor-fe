@@ -339,6 +339,11 @@ export interface components {
       /** User Count */
       user_count: number;
     };
+    /** User Group */
+    UserGroup: {
+      group_id: number;
+      user_id: string;
+    };
     /** User */
     User: {
       /** Id */
@@ -810,6 +815,28 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["User"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Browse User Group */
+  get_user_group_user__user_id__group_get: {
+    parameters: {
+      path: {
+        user_id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserGroup"];
         };
       };
       /** @description Validation Error */
