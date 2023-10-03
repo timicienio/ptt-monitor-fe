@@ -66,8 +66,8 @@ export interface paths {
     get: operations["get_user_topic_stance_user__user_id__topic_stance_get"];
   };
   "/user/{user_id}/user-group": {
-    /** Get User Group */
-    get: operations["get_user_group_user__user_id__group_get"];
+    /** Read User User Group */
+    get: operations["read_user_user_group_user__user_id__user_group_get"];
   };
   "/user-graph": {
     /** Browse User Graph */
@@ -92,6 +92,10 @@ export interface paths {
   "/user-group/{group_id}/stance": {
     /** Browse Topic Stance By Group Id */
     get: operations["browse_topic_stance_by_group_id_user_group__group_id__stance_get"];
+  };
+  "/user-group/{group_id}/active-topic": {
+    /** Browse User Group Active Topic */
+    get: operations["browse_user_group_active_topic_user_group__group_id__active_topic_get"];
   };
 }
 
@@ -154,6 +158,15 @@ export interface components {
       /** Comments */
       comments: components["schemas"]["CommentWithPost"][];
     };
+    /** BrowseUserGroupActiveTopicOutput */
+    BrowseUserGroupActiveTopicOutput: {
+      /** Topic Id */
+      topic_id: number;
+      /** Count */
+      count: number;
+      /** Name */
+      name: string;
+    };
     /** BrowseUserTopicsOutput */
     BrowseUserTopicsOutput: {
       /** Topics */
@@ -185,6 +198,8 @@ export interface components {
     GetTopicStanceOutput: {
       /** Stances */
       stances: components["schemas"]["TopicStanceWithUserCount"][];
+      /** Keywords */
+      keywords: components["schemas"]["Keyword"][];
     };
     /** GetUserPostsOutput */
     GetUserPostsOutput: {
@@ -236,7 +251,7 @@ export interface components {
       /** User Graph */
       user_graph: components["schemas"]["UserGraph"][];
       /** User Group */
-      user_group: components["schemas"]["UserGroupOutput"][];
+      user_group: components["schemas"]["UserGroupOutputOutput"][];
     };
     /** ReadUserNeighborOutput */
     ReadUserNeighborOutput: {
@@ -378,8 +393,15 @@ export interface components {
       /** Weight */
       weight: number;
     };
+    /** UserGroup */
+    UserGroup: {
+      /** Group Id */
+      group_id: number;
+      /** User Id */
+      user_id: string;
+    };
     /** UserGroupOutput */
-    UserGroupOutput: {
+    UserGroupOutputOutput: {
       /**
        * Id
        * @default
@@ -873,6 +895,28 @@ export interface operations {
       };
     };
   };
+  /** Read User User Group */
+  read_user_user_group_user__user_id__user_group_get: {
+    parameters: {
+      path: {
+        user_id: string;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserGroup"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
   /** Browse User Graph */
   browse_user_graph_user_graph_get: {
     parameters: {
@@ -929,7 +973,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["UserGroupOutput"][];
+          "application/json": components["schemas"]["UserGroupOutputOutput"][];
         };
       };
       /** @description Validation Error */
@@ -1003,6 +1047,32 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["BrowseTopicStanceByGroupIdOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Browse User Group Active Topic */
+  browse_user_group_active_topic_user_group__group_id__active_topic_get: {
+    parameters: {
+      query?: {
+        limit?: number | null;
+        offset?: number | null;
+      };
+      path: {
+        group_id: number;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["BrowseUserGroupActiveTopicOutput"][];
         };
       };
       /** @description Validation Error */
