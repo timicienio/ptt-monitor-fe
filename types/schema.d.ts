@@ -81,6 +81,14 @@ export interface paths {
     /** Read User Graph By Group Id */
     get: operations["read_user_graph_by_group_id_user_group__group_id__user_graph_get"];
   };
+  "/user-group/{group_id}/active-user": {
+    /** Browse Active User By Group Id */
+    get: operations["browse_active_user_by_group_id_user_group__group_id__active_user_get"];
+  };
+  "/user-group/{group_id}/stance": {
+    /** Browse Topic Stance By Group Id */
+    get: operations["browse_topic_stance_by_group_id_user_group__group_id__stance_get"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -131,6 +139,11 @@ export interface components {
     BrowseTopicOutputOutput: {
       /** Topics */
       topics: components["schemas"]["BrowseTopic"][];
+    };
+    /** BrowseTopicStanceByGroupIdOutput */
+    BrowseTopicStanceByGroupIdOutput: {
+      /** Topics */
+      topics: components["schemas"]["TopicOutput"][];
     };
     /** BrowseUserCommentsOutput */
     BrowseUserCommentsOutput: {
@@ -219,7 +232,7 @@ export interface components {
       /** User Graph */
       user_graph: components["schemas"]["UserGraph"][];
       /** User Group */
-      user_group: components["schemas"]["UserGroup"][];
+      user_group: components["schemas"]["UserGroupOutput"][];
     };
     /** ReadUserNeighborOutput */
     ReadUserNeighborOutput: {
@@ -356,15 +369,8 @@ export interface components {
       /** Weight */
       weight: number;
     };
-    /** UserGroup */
-    UserGroup: {
-      /** Group Id */
-      group_id: number;
-      /** User Id */
-      user_id: string;
-    };
     /** UserGroupOutput */
-    UserGroupOutputOutput: {
+    UserGroupOutput: {
       /**
        * Id
        * @default
@@ -838,11 +844,22 @@ export interface operations {
   };
   /** Browse User Graph */
   browse_user_graph_user_graph_get: {
+    parameters: {
+      query?: {
+        record_id?: number | null;
+      };
+    };
     responses: {
       /** @description Successful Response */
       200: {
         content: {
           "application/json": components["schemas"]["ReadUserGraphByGroupIdOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
         };
       };
     };
@@ -852,6 +869,7 @@ export interface operations {
     parameters: {
       query: {
         user_id: string;
+        record_id?: number | null;
       };
     };
     responses: {
@@ -880,7 +898,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["UserGroupOutputOutput"][];
+          "application/json": components["schemas"]["UserGroupOutput"][];
         };
       };
       /** @description Validation Error */
@@ -894,6 +912,9 @@ export interface operations {
   /** Read User Graph By Group Id */
   read_user_graph_by_group_id_user_group__group_id__user_graph_get: {
     parameters: {
+      query?: {
+        record_id?: number | null;
+      };
       path: {
         group_id: number;
       };
@@ -903,6 +924,54 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["ReadUserGraphByGroupIdOutput"];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Browse Active User By Group Id */
+  browse_active_user_by_group_id_user_group__group_id__active_user_get: {
+    parameters: {
+      query?: {
+        limit?: number | null;
+        offset?: number | null;
+      };
+      path: {
+        group_id: number;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["UserWithDataCount"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Browse Topic Stance By Group Id */
+  browse_topic_stance_by_group_id_user_group__group_id__stance_get: {
+    parameters: {
+      path: {
+        group_id: number;
+      };
+    };
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["BrowseTopicStanceByGroupIdOutput"];
         };
       };
       /** @description Validation Error */

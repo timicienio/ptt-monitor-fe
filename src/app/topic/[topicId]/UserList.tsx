@@ -29,8 +29,6 @@ export default function UserList({
     limit: 24,
   });
 
-  console.log(data);
-
   const userCount = topicData?.data.meta.user_count;
   const commentCount = topicData?.data.meta.comment_count;
   const postCount = topicData?.data.meta.post_count;

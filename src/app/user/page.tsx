@@ -16,7 +16,7 @@ import { useThrottle } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
 import useActiveUsers from "@/lib/user/useActiveUsers";
 import { ResponsiveCirclePacking } from "@nivo/circle-packing";
-import CustomTextField from '@/components/TextField'; 
+import CustomTextField from "@/components/TextField";
 
 export default function UserOverviewPage() {
   const router = useRouter();
@@ -114,10 +114,10 @@ export default function UserOverviewPage() {
               )}
               sx={{
                 width: 240,
-                '& .MuiAutocomplete-listbox': {
-                  borderRadius: '12px',
-                  borderColor: 'primary.dark'
-                }
+                "& .MuiAutocomplete-listbox": {
+                  borderRadius: "12px",
+                  borderColor: "primary.dark",
+                },
               }}
             />
           </Box>
@@ -131,10 +131,7 @@ export default function UserOverviewPage() {
             gap: 2,
           }}
         >
-          <Card
-            elevation={0}
-            sx={{ borderRadius: 2, width: "100%", px: 2 }}
-          >
+          <Card elevation={0} sx={{ borderRadius: 2, width: "100%", px: 2 }}>
             <CardContent
               sx={{
                 display: "flex",
@@ -161,14 +158,16 @@ export default function UserOverviewPage() {
                   labelsFilter={(label) => label.node.depth === 1}
                   valueFormat={(value) => `${String(value)}篇`}
                   motionConfig="default"
+                  isInteractive
+                  onClick={(node) => {
+                    if (node.depth === 0) return;
+                    router.push(`/user/${node.id}`);
+                  }}
                 />
               </Box>
             </CardContent>
           </Card>
-          <Card
-            elevation={0}
-            sx={{ borderRadius: 2, width: "100%", px: 2 }}
-          >
+          <Card elevation={0} sx={{ borderRadius: 2, width: "100%", px: 2 }}>
             <CardContent
               sx={{
                 display: "flex",
@@ -195,6 +194,11 @@ export default function UserOverviewPage() {
                   labelsFilter={(label) => label.node.depth === 1}
                   valueFormat={(value) => `${String(value)}則`}
                   motionConfig="default"
+                  isInteractive
+                  onClick={(node) => {
+                    if (node.depth === 0) return;
+                    router.push(`/user/${node.id}`);
+                  }}
                 />
               </Box>
             </CardContent>

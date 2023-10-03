@@ -1,0 +1,166 @@
+"use client";
+
+import useTopic from "@/lib/topic/useTopic";
+import {
+  Container,
+  Box,
+  Typography,
+  LinearProgress,
+  Card,
+  CardContent,
+  Chip,
+} from "@mui/material";
+
+import useUserGroup from "@/lib/userGroup/useUserGroup";
+import useUserGroupActiveUsers from "@/lib/userGroup/useUserGroupActiveUsers";
+import useUserGroupTopicStance from "@/lib/userGroup/useUserGroupTopicStance";
+import StanceIndicator from "@/components/StanceIndicator";
+
+export default function UserGroupPage({
+  params: { userGroupId },
+}: {
+  params: { userGroupId: number };
+}) {
+  const { data: userGroupData } = useUserGroup(userGroupId);
+  const { data: activeUsersData } = useUserGroupActiveUsers(userGroupId);
+  const { data: topicStanceData } = useUserGroupTopicStance(userGroupId);
+
+  const userGroup = userGroupData?.data ?? [];
+  const activeUsers = activeUsersData?.data ?? [];
+  const topicStance = topicStanceData?.data;
+
+  return (
+    <Container>
+      <Box
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignContent: "center",
+          pt: 4,
+          mb: 4,
+        }}
+      >
+        <Typography
+          variant="h2"
+          gutterBottom
+          textAlign={"left"}
+          sx={{ flexShrink: 0, mr: 3 }}
+        >
+          使用者群體 / {userGroupId}
+        </Typography>
+        <Card
+          elevation={0}
+          sx={{
+            borderRadius: 2,
+            width: "100%",
+            px: 2,
+            mt: 2,
+            backgroundColor: "secondary.contrastText",
+          }}
+        >
+          <CardContent>
+            <Typography variant="h3" sx={{ mb: 2 }}>
+              活躍使用者
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                flexWrap: "wrap",
+              }}
+            >
+              {activeUsers.map((user) => (
+                <Chip
+                  variant="outlined"
+                  component="a"
+                  href={`/user/${user.id}`}
+                  label={user.id}
+                />
+              ))}
+            </Box>
+          </CardContent>
+        </Card>
+        <Card
+          elevation={0}
+          sx={{
+            borderRadius: 2,
+            width: "100%",
+            px: 2,
+            mt: 2,
+            backgroundColor: "secondary.contrastText",
+          }}
+        >
+          <CardContent>
+            <Typography variant="h3" sx={{ mb: 2 }}>
+              熱門話題立場
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 5,
+                flexWrap: "wrap",
+                alignItems: "flex-start",
+              }}
+            >
+              {topicStance?.topics.map((topic) => (
+                <Box
+                  sx={{
+                    minWidth: 140,
+                    marginLeft: "22px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography
+                    variant="h5"
+                    sx={{ transform: "translateX(-5px)", width: "100%" }}
+                  >
+                    {topic.name}
+                  </Typography>
+                  <StanceIndicator
+                    value={topic.score ? Math.round(topic.score * 100) : 50}
+                    disabled
+                    valueLabelDisplay="on"
+                    marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
+                  />
+                  <Box
+                    sx={{
+                      width: "110%",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        maxWidth: "70px",
+                        color: "black",
+                        marginTop: "10px",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {topic.stances[0]?.name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        maxWidth: "70px",
+                        color: "black",
+                        marginTop: "10px",
+                        fontSize: "14px",
+                        textAlign: "right",
+                      }}
+                    >
+                      {topic.stances[1]?.name}
+                    </Typography>
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
+    </Container>
+  );
+}
