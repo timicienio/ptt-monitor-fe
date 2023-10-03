@@ -814,7 +814,7 @@ export interface operations {
       /** @description Successful Response */
       200: {
         content: {
-          "application/json": components["schemas"]["UserGroup"][];
+          "application/json": components["schemas"]["UserGroup"];
         };
       };
       /** @description Validation Error */

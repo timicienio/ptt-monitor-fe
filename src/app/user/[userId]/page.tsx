@@ -319,7 +319,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                     }}
                   >
                     <Typography>
-                      {userGroup?.group_id || userGroup?.error === "NotFound" ? userGroup?.group_id : "無"}
+                      {userGroup?.group_id ? userGroup?.group_id : "無"}
                     </Typography>
                   </Box>
                 </Box>
