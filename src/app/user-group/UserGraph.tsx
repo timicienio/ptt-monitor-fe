@@ -35,7 +35,7 @@ function UserGraph() {
   const edges = useMemo(
     () =>
       data?.data.user_graph
-        .filter((edge) => edge.weight > 0.28)
+        .filter((edge) => edge.weight > 0.275)
         .map((edge) => ({
           from: edge.user_id_1,
           to: edge.user_id_2,

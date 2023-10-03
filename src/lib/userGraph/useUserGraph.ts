@@ -3,7 +3,7 @@ import { browseUserGraph } from "./fetchers";
 
 export default function useUserGraph() {
   const userGraphSWR = useSWRImmutable(["userGraph"], () =>
-    browseUserGraph({ record_id: 8 })
+    browseUserGraph({ record_id: 10 })
   );
 
   return userGraphSWR;
