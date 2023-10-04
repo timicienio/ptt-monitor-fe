@@ -346,7 +346,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         backgroundColor: "primary.light",
                       },
                     }}
-                    onClick={() => router.push("/user-group")}
+                    onClick={() => router.push(`/user-group/${userUserGroupData?.data.group_id}`)}
                     disabled={!userGroup}
                   >
                     查看使用者群體
