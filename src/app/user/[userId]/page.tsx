@@ -324,14 +324,16 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                       flexWrap: "wrap",
                     }}
                   >
-                    {userGroup?.slice(0, 10)?.map((user) => (
-                      <Chip
-                        variant="outlined"
-                        component="a"
-                        href={`/user/${user.user_id}`}
-                        label={user.user_id}
-                      />
-                    ))}
+                    {userGroup
+                      ?.slice(0, 10)
+                      ?.map((user) => (
+                        <Chip
+                          variant="outlined"
+                          component="a"
+                          href={`/user/${user.user_id}`}
+                          label={user.user_id}
+                        />
+                      )) ?? <Typography variant="body2">無</Typography>}
                   </Box>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -345,6 +347,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                       },
                     }}
                     onClick={() => router.push("/user-group")}
+                    disabled={!userGroup}
                   >
                     查看使用者群體
                   </Button>
