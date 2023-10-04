@@ -194,9 +194,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               variant="h2"
               sx={{ color: "secondary.contrastText", marginTop: "5px" }}
             >
-              {user?.push_count === undefined || user?.boo_count === undefined
-                ? "-"
-                : user?.push_count + user?.boo_count}
+              {user?.comment_count === undefined ? "-" : user?.comment_count}
             </Typography>
           </Box>
           <Box
@@ -346,7 +344,11 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         backgroundColor: "primary.light",
                       },
                     }}
-                    onClick={() => router.push(`/user-group/${userUserGroupData?.data.group_id}`)}
+                    onClick={() =>
+                      router.push(
+                        `/user-group/${userUserGroupData?.data.group_id}`
+                      )
+                    }
                     disabled={!userGroup}
                   >
                     查看使用者群體
