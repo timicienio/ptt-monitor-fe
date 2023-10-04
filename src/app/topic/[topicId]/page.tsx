@@ -9,7 +9,7 @@ import {
   Card,
 } from "@mui/material";
 import PostList from "./Posts";
-import UserList from "./Users";
+import Users from "./Users";
 import useTopicStance from "@/lib/topic/useTopicStance";
 
 export default function TopicPage({ params }: { params: { topicId: number } }) {
@@ -210,7 +210,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
           backgroundColor: "secondary.contrastText",
         }}
       >
-        <UserList topicId={params.topicId} />
+        <Users topicId={params.topicId} />
       </Card>
     </Container>
   );

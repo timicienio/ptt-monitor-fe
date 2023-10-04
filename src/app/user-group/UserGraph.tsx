@@ -35,7 +35,7 @@ function UserGraph() {
   const edges = useMemo(
     () =>
       data?.data.user_graph
-        .filter((edge) => edge.weight > 0.38)
+        .filter((edge) => edge.weight > 0.35)
         .map((edge) => ({
           from: edge.user_id_1,
           to: edge.user_id_2,
@@ -111,7 +111,7 @@ function UserGraph() {
         face: "Tahoma",
       },
       shape: "dot",
-      size: 30,
+      size: 35,
     },
     edges: {
       arrows: {

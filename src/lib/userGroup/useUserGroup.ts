@@ -4,7 +4,7 @@ import { readUserGroup } from "./fetchers";
 export default function useUserGroup(userGroupId: number | undefined) {
   const userGroupSWR = useSWR(
     userGroupId ? ["userGroup", userGroupId] : null,
-    () => readUserGroup({ group_id: userGroupId as number, record_id: 14 })
+    () => readUserGroup({ group_id: userGroupId as number, record_id: 16 })
   );
 
   return userGroupSWR;

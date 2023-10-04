@@ -78,12 +78,7 @@ export default function UserList({
             }}
           >
             <ArticleIcon sx={{ mr: 1 }} />
-            <Typography align="right">
-              {stance === "POSITIVE"
-                ? postCount?.positive
-                : postCount?.negative}
-              篇
-            </Typography>
+            <Typography align="right">文章</Typography>
           </Box>
           <Box
             sx={{
@@ -93,12 +88,7 @@ export default function UserList({
             }}
           >
             <CommentIcon sx={{ mr: 1 }} />
-            <Typography align="right">
-              {stance === "POSITIVE"
-                ? commentCount?.positive
-                : commentCount?.negative}
-              則
-            </Typography>
+            <Typography align="right">留言</Typography>
           </Box>
         </Box>
       </ListItem>
