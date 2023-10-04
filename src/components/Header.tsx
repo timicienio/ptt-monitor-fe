@@ -1,4 +1,11 @@
 import { AppBar, Toolbar, Typography, Box, Tab, Tabs } from "@mui/material";
+import { Inconsolata } from "next/font/google";
+
+const inconsolata = Inconsolata({
+  weight: ["200"],
+  display: "swap",
+  subsets: ['latin']
+});
 
 const navItems = [
   { text: "熱門話題", href: "/topic", disabled: false },
@@ -20,11 +27,11 @@ export default function Header() {
           variant="h2"
           noWrap
           component="a"
-          sx={{ textDecoration: "none" }}
+          sx={{ textDecoration: "none", fontFamily: inconsolata.style.fontFamily }}
           href="/"
           color="secondary.contrastText"
         >
-          PTT Monitor
+          ADAPTT
         </Typography>
         <Box sx={{ display: { sm: "flex" }, gap: 3, mr: 5, height: "100%" }}>
           <Tabs>

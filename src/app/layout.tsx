@@ -11,8 +11,8 @@ import theme from "@/components/ThemeRegistry/theme";
 import Header from "@/components/Header";
 
 export const metadata = {
-  title: "PTT Monitor v0",
-  description: "PTT Monitor v0",
+  title: "ADAPTT 1.0",
+  description: "AI-Driven Analysis for PTT.",
 };
 
 const DRAWER_WIDTH = 240;
