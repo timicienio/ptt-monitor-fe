@@ -12,7 +12,7 @@ const navItems = [
   { text: "使用者", href: "/user", disabled: false },
   { text: "使用者群體", href: "/user-group", disabled: false },
   { text: "PTT 網頁版", href: "https://www.pttweb.cc/", disabled: false },
-];
+]; 
 
 export default function Header() {
   return (

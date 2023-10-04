@@ -884,6 +884,9 @@ export interface operations {
   /** Read User User Group */
   read_user_user_group_user__user_id__user_group_get: {
     parameters: {
+      query?: {
+        record_id?: number | null;
+      };
       path: {
         user_id: string;
       };
@@ -951,6 +954,9 @@ export interface operations {
   /** Read User Group */
   read_user_group_user_group__group_id__get: {
     parameters: {
+      query?: {
+        record_id?: number | null;
+      };
       path: {
         group_id: number;
       };
@@ -1001,6 +1007,7 @@ export interface operations {
       query?: {
         limit?: number | null;
         offset?: number | null;
+        record_id?: number | null;
       };
       path: {
         group_id: number;
@@ -1024,6 +1031,9 @@ export interface operations {
   /** Browse Topic Stance By Group Id */
   browse_topic_stance_by_group_id_user_group__group_id__stance_get: {
     parameters: {
+      query?: {
+        record_id?: number | null;
+      };
       path: {
         group_id: number;
       };
@@ -1049,6 +1059,7 @@ export interface operations {
       query?: {
         limit?: number | null;
         offset?: number | null;
+        record_id?: number | null;
       };
       path: {
         group_id: number;
