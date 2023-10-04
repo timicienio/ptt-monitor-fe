@@ -151,7 +151,7 @@ export interface components {
     /** BrowseTopicStanceByGroupIdOutput */
     BrowseTopicStanceByGroupIdOutput: {
       /** Topics */
-      topics: components["schemas"]["TopicOutput"][];
+      topics: components["schemas"]["processor__http__user_group__TopicOutput"][];
     };
     /** BrowseUserCommentsOutput */
     BrowseUserCommentsOutput: {
@@ -209,7 +209,7 @@ export interface components {
     /** GetUserTopicStanceOutput */
     GetUserTopicStanceOutput: {
       /** Topics */
-      topics: components["schemas"]["TopicOutput"][];
+      topics: components["schemas"]["processor__http__user__TopicOutput"][];
     };
     /** HTTPValidationError */
     HTTPValidationError: {
@@ -317,15 +317,6 @@ export interface components {
      * @enum {string}
      */
     StanceType: "POSITIVE" | "NEGATIVE" | "ALL";
-    /** TopicOutput */
-    TopicOutput: {
-      /** Name */
-      name: string;
-      /** Stances */
-      stances: components["schemas"]["StanceOutput"][];
-      /** Score */
-      score: number | null;
-    };
     /** TopicStanceWithUserCount */
     TopicStanceWithUserCount: {
       /** Stance Id */
@@ -338,11 +329,6 @@ export interface components {
       description: string;
       /** User Count */
       user_count: number;
-    };
-    /** User Group */
-    UserGroup: {
-      group_id: number;
-      user_id: string;
     };
     /** User */
     User: {
@@ -501,6 +487,28 @@ export interface components {
       msg: string;
       /** Error Type */
       type: string;
+    };
+    /** TopicOutput */
+    processor__http__user__TopicOutput: {
+      /** Id */
+      id: number;
+      /** Name */
+      name: string;
+      /** Stances */
+      stances: components["schemas"]["StanceOutput"][];
+      /** Score */
+      score: number | null;
+    };
+    /** TopicOutput */
+    processor__http__user_group__TopicOutput: {
+      /** Name */
+      name: string;
+      /** Stances */
+      stances: components["schemas"]["StanceOutput"][];
+      /** Score */
+      score: number | null;
+      /** Keywords */
+      keywords: components["schemas"]["Keyword"][];
     };
   };
   responses: never;
@@ -815,28 +823,6 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["User"][];
-        };
-      };
-      /** @description Validation Error */
-      422: {
-        content: {
-          "application/json": components["schemas"]["HTTPValidationError"];
-        };
-      };
-    };
-  };
-  /** Browse User Group */
-  get_user_group_user__user_id__group_get: {
-    parameters: {
-      path: {
-        user_id: string;
-      };
-    };
-    responses: {
-      /** @description Successful Response */
-      200: {
-        content: {
-          "application/json": components["schemas"]["UserGroup"];
         };
       };
       /** @description Validation Error */

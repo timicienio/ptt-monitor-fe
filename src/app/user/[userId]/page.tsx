@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import PlaceIcon from "@mui/icons-material/Place";
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import useUser from "@/lib/user/useUser";
 import moment from "moment";
 import { useRouter } from "next/navigation";
@@ -28,8 +28,9 @@ import useUserPosts from "@/lib/post/useUserPosts";
 import useUserComments from "@/lib/comment.ts/useUserComments";
 import useUserStance from "@/lib/topic/useUserStance";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import useUserGroup from "@/lib/user/useUserGroup";
+import useUserUserGroup from "@/lib/user/useUserUserGroup";
 import StanceIndicator from "@/components/StanceIndicator";
+import useUserGroup from "@/lib/userGroup/useUserGroup";
 
 const commentTypeToSymbol = {
   PUSH: "推",
@@ -58,7 +59,11 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   );
   const { data: userCommentsData, isLoading: userCommentsIsLoading } =
     useUserComments(params.userId);
-  const { data: userGroupData } = useUserGroup(params.userId);
+  const { data: userUserGroupData } = useUserUserGroup(params.userId);
+
+  const { data: userGroupData } = useUserGroup(
+    userUserGroupData?.data.group_id
+  );
 
   const user = data?.data;
   const userTopics = userTopicsData?.data.topics ?? [];
@@ -281,30 +286,32 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         backgroundColor: "primary.light",
                       },
                     }}
-                    onClick={() => router.push(`https://www.pttweb.cc/user/${params.userId}`)}
+                    onClick={() =>
+                      router.push(`https://www.pttweb.cc/user/${params.userId}`)
+                    }
                   >
                     使用者詳細資訊
-                    <OpenInNewIcon sx={{ marginLeft: "4px" }}/>
+                    <OpenInNewIcon sx={{ marginLeft: "4px", height: "18px" }} />
                   </Button>
                 </Box>
               </CardContent>
             </Card>
             <Card
               elevation={0}
-              sx={{ 
-                borderRadius: 2, 
-                flex: "1 1 calc(50% - 8px)", 
+              sx={{
+                borderRadius: 2,
+                flex: "1 1 calc(50% - 8px)",
                 px: 2,
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              <CardContent 
-                sx={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  flexGrow: 1 
-                  }}
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  flexGrow: 1,
+                }}
               >
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="h3" sx={{ mb: 2 }}>
@@ -317,9 +324,14 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                       flexWrap: "wrap",
                     }}
                   >
-                    <Typography>
-                      {userGroup?.group_id ? userGroup?.group_id : "無"}
-                    </Typography>
+                    {userGroup?.slice(0, 10)?.map((user) => (
+                      <Chip
+                        variant="outlined"
+                        component="a"
+                        href={`/user/${user.user_id}`}
+                        label={user.user_id}
+                      />
+                    ))}
                   </Box>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -332,9 +344,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         backgroundColor: "primary.light",
                       },
                     }}
-                    onClick={() =>
-                      router.push('/user-group')
-                    }
+                    onClick={() => router.push("/user-group")}
                   >
                     查看使用者群體
                   </Button>
@@ -419,7 +429,15 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         variant="h5"
                         sx={{ transform: "translateX(-5px)", width: "100%" }}
                       >
-                        {topic.name}
+                        {(() => {
+                          const keywords =
+                            userTopics.find(
+                              (userTopic) => userTopic.id === topic.id
+                            )?.keywords ?? [];
+                          return `${keywords.at(0)?.name ?? ""}, ${
+                            keywords.at(1)?.name ?? ""
+                          }`;
+                        })()}
                       </Typography>
                       <StanceIndicator
                         value={Math.round((topic.score as number) * 100)}
