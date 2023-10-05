@@ -37,12 +37,12 @@ export default function Users({ topicId }: { topicId: number }) {
       >
         <UserList
           topicId={topicId}
-          title={topicStance[0]?.name}
+          title={topicStance[1]?.name}
           stance="NEGATIVE"
         />
         <UserList
           topicId={topicId}
-          title={topicStance[1]?.name}
+          title={topicStance[0]?.name}
           stance="POSITIVE"
         />
       </Box>
