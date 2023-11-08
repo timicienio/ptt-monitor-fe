@@ -7,10 +7,15 @@ import {
   Typography,
   LinearProgress,
   Card,
+  IconButton
 } from "@mui/material";
+import StackedBarChartOutlinedIcon from '@mui/icons-material/StackedBarChartOutlined';
+import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import PostList from "./Posts";
 import Users from "./Users";
+import Chart from "./Chart";
 import useTopicStance from "@/lib/topic/useTopicStance";
+import React, { useState } from 'react';
 
 export default function TopicPage({ params }: { params: { topicId: number } }) {
   const { data } = useTopic(Number(params.topicId));
@@ -27,6 +32,11 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
       ((topicStance[0]?.user_count ?? Infinity) +
         (topicStance[1]?.user_count ?? Infinity))) *
     100;
+
+  const [showComponent, setShowComponent] = useState('Users'); // default to showing Users
+  const handleIconClick = (component: string) => {
+    setShowComponent(component);
+  }
 
   return (
     <Container>
@@ -49,31 +59,6 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
           熱門話題: {data?.data.keywords.at(0)?.name},{" "}
           {data?.data.keywords.at(1)?.name}
         </Typography>
-        {/*
-        <Typography sx={{ mt: 1, mr: 1 }}>{postCount?.negative}</Typography>
-        <Box
-          sx={{
-            width: "120px",
-            justifyContent: "center",
-            alignContent: "center",
-            mt: 1.45,
-          }}
-        >
-          <LinearProgress
-            variant="determinate"
-            value={articleStanceRatio}
-            sx={{
-              height: 16,
-              border: 1,
-              borderRadius: 8,
-              backgroundColor: "secondary.light",
-            }}
-            color="secondary"
-          />
-        </Box>
-        <Typography sx={{ mt: 1, ml: 1 }}>{postCount?.positive}</Typography>
-        <Typography sx={{ mt: 1, ml: 3 }}>共 {postCount?.total} 篇</Typography>
-        */}
       </Box>
       <Card
         elevation={0}
@@ -142,7 +127,6 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
 
         <Box sx={{ mt: 3 }}>
           {" "}
-          {/* Gap between the above and below sections */}
           {Array.isArray(topicStance) && topicStance.length > 0 && (
             <Box
               sx={{
@@ -158,7 +142,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
                   gap: 1,
                 }}
               >
-                <Typography sx={{ minWidth: "64px", fontWeight: "bold" }}>
+                <Typography sx={{ minWidth: "80px", fontWeight: "bold" }}>
                   {topicStance[0]?.name}
                 </Typography>
                 <Typography sx={{}}>-</Typography>
@@ -173,7 +157,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
                     gap: 1,
                   }}
                 >
-                  <Typography sx={{ minWidth: "64px", fontWeight: "bold" }}>
+                  <Typography sx={{ minWidth: "80px", fontWeight: "bold" }}>
                     {topicStance[1]?.name}
                   </Typography>
                   <Typography sx={{}}>-</Typography>
@@ -210,8 +194,79 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
           backgroundColor: "secondary.contrastText",
         }}
       >
-        <Users topicId={params.topicId} />
+        <Box
+          sx={{
+            height: 40,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <Typography variant="h3">使用者立場分析</Typography>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              borderColor: 'grey.500',
+              borderStyle: 'solid',
+              borderWidth: 1,
+              borderRadius: 1,
+            }}
+          >
+            <IconButton
+              onClick={() => handleIconClick('Users')}
+              sx={{
+                borderRadius: 0,
+                width: '50%',
+                justifyContent: 'center',
+                backgroundColor: showComponent === 'Users' ? 'grey.300' : 'transparent',
+                color: showComponent === 'Chart' ? 'grey.300' : 'grey.600',
+                '&:hover': {
+                  backgroundColor: 'info.light',
+                  color: 'info.dark'
+                },
+                '&:active': {
+                  backgroundColor: 'info.dark',
+                  color: 'info.light'
+                },
+              }}
+            >
+              <TableChartOutlinedIcon />
+            </IconButton>
+
+            <IconButton
+              onClick={() => handleIconClick('Chart')}
+              sx={{
+                borderRadius: 0,
+                width: '50%',
+                justifyContent: 'center',
+                backgroundColor: showComponent === 'Chart' ? 'grey.300' : 'transparent',
+                color: showComponent === 'Chart' ? 'grey.600' : 'grey.300',
+                '&:hover': {
+                  backgroundColor: 'info.light',
+                  color: 'info.dark'
+                },
+                '&:active': {
+                  backgroundColor: 'info.dark',
+                  color: 'info.light'
+                },
+              }}
+            >
+              <StackedBarChartOutlinedIcon />
+            </IconButton>
+          </Box>
+        </Box>
+        {showComponent === 'Users' ? <Users topicId={params.topicId} /> : <Chart topicId={params.topicId} />}
       </Card>
+
     </Container>
   );
 }
