@@ -5,7 +5,12 @@ import TopicsChart from "./TopicsChart";
 
 export default function TopicsPage() {
   return (
-    <Container>
+    <Container
+      sx={{
+        mt: ["48px", "56px", "64px"],
+        p: 3,
+      }}
+    >
       <Box
         sx={{
           height: "100%",
