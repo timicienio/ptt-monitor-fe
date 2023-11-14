@@ -67,7 +67,7 @@ export default function HomePage() {
             position: 'relative',
             height: '100vh',
             width: '100%',
-            bgcolor: 'primary.dark',
+            bgcolor: 'primary.contrastText',
             display: 'flex', 
             flexDirection: 'column', 
             justifyContent: 'flex-start', 
