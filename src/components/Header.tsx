@@ -19,7 +19,7 @@ export default function Header() {
     <AppBar component="nav" position="fixed" sx={{ zIndex: 2000 }}>
       <Toolbar
         sx={{
-          backgroundColor: "primary.dark",
+          backgroundColor: "primary.contrastText",
           justifyContent: "space-between",
         }}
       >
@@ -45,7 +45,7 @@ export default function Header() {
                 sx={{
                   color: "secondary.contrastText",
                   "&:hover": {
-                    color: "primary.dark",
+                    color: "primary.contrastText",
                     backgroundColor: "secondary.contrastText",
                   },
                 }}

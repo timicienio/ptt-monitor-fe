@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useThrottle } from "@uidotdev/usehooks";
 import CustomTextField from "@/components/TextField";
+import ButtonSolid from "@/components/ButtonSolid";
+import ButtonHollow from "@/components/ButtonHollow";
 import {
   Card,
   CardContent,
@@ -21,6 +23,10 @@ import {
   ListItem,
   Button,
   Autocomplete,
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogTitle,
 } from "@mui/material";
 import useUsers from "@/lib/user/useUsers";
 import useUserTopics from "@/lib/topic/useUserTopics";
@@ -31,6 +37,11 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import useUserUserGroup from "@/lib/user/useUserUserGroup";
 import StanceIndicator from "@/components/StanceIndicator";
 import useUserGroup from "@/lib/userGroup/useUserGroup";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import ScheduleIcon from '@mui/icons-material/Schedule';
 
 const commentTypeToSymbol = {
   PUSH: "推",
@@ -39,6 +50,13 @@ const commentTypeToSymbol = {
 };
 
 export default function UserPage({ params }: { params: { userId: string } }) {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [tempDate, setTempDate] = useState(null); 
+
+  const formattedDate = selectedDate ? dayjs(selectedDate).format("YYYY-MM-DD") : undefined;
+  const query = formattedDate ? { record_date: formattedDate } : undefined;
+
   const router = useRouter();
 
   const [searchValue, setSearchValue] = useState<string | null>(null);
@@ -52,7 +70,8 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   });
 
   const { data } = useUser(params.userId);
-  const { data: useUserStanceData } = useUserStance(params.userId);
+  const { data: useUserStanceData } = useUserStance(params.userId, query);
+  
   const { data: userTopicsData } = useUserTopics(params.userId);
   const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(
     params.userId
@@ -71,6 +90,30 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const userComments = userCommentsData?.data.comments ?? [];
   const userTopicStance = useUserStanceData?.data.topics ?? [];
   const userGroup = userGroupData?.data;
+
+  console.log('userTopicStance:', userTopicStance);
+
+  const handleOpenDialog = () => {
+    setTempDate(selectedDate); 
+    setDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
+  const handleConfirm = () => {
+    setSelectedDate(tempDate); 
+    handleCloseDialog();
+  };
+
+  const handleReset = () => {
+    setTempDate(null);
+  };
+
+  const formatDateForButton = (date: Day | null): string => {
+    return date ? dayjs(date).format("YYYY-MM-DD") : "今日";
+  };  
 
   useEffect(
     /** Go to user page when search value is set. */
@@ -149,7 +192,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                 width: 240,
                 "& .MuiAutocomplete-listbox": {
                   borderRadius: "12px",
-                  borderColor: "primary.dark",
+                  borderColor: "primary.contrastText",
                 },
               }}
             />
@@ -284,7 +327,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                     sx={{
                       width: "100%",
                       backgroundColor: "primary.main",
-                      color: "primary.dark",
+                      color: "primary.contrastText",
                       "&:hover": {
                         backgroundColor: "primary.light",
                       },
@@ -344,7 +387,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                     sx={{
                       width: "100%",
                       backgroundColor: "primary.main",
-                      color: "primary.dark",
+                      color: "primary.contrastText",
                       "&:hover": {
                         backgroundColor: "primary.light",
                       },
@@ -412,9 +455,86 @@ export default function UserPage({ params }: { params: { userId: string } }) {
             }}
           >
             <CardContent>
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                mb: '10px',
+              }}
+            >
               <Typography variant="h3" sx={{ mb: 2 }}>
                 熱門話題立場
               </Typography>
+              <Box>
+                <Button 
+                  onClick={handleOpenDialog}
+                  sx={{
+                    width: "130px",
+                    border: "1px solid #3B8EA5",
+                    borderRadius: "5px",
+                    color: "secondary.dark",
+                  }}
+                >
+                  <ScheduleIcon 
+                    sx={{
+                      mr: "5px",
+                    }}
+                  />
+                  {formatDateForButton(selectedDate)}
+                </Button>
+              </Box>
+              </Box>
+              <Dialog 
+                open={dialogOpen} 
+                onClose={handleCloseDialog}
+                PaperProps={{
+                  sx: {
+                    marginTop: '-7%',
+                  }
+                }}
+              >
+                <DialogTitle
+                  variant="h3"
+                  sx={{
+                    mt: "5px",
+                    textAlign: "center",
+                  }}
+                >
+                  更改日期
+                </DialogTitle>
+                <DialogContent>
+                  <Typography
+                    sx={{
+                      mb: "30px",
+                    }}
+                  >
+                    選擇不同的日期，以查看該時間點下的熱門話題立場結果。
+                  </Typography>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="更改日期"
+                      value={tempDate}
+                      onChange={(newValue) => setTempDate(newValue)}
+                      sx={{ 
+                        width: "100%",
+                      }}
+                    />
+                  </LocalizationProvider>
+                </DialogContent>
+                <DialogActions
+                  sx={{
+                    display: "flex",       
+                    justifyContent: "space-between",
+                    mb: "5px",
+                    mr: "17px",
+                    ml: "17px",
+                  }}
+                >
+                  <ButtonSolid onClick={handleReset}>重置</ButtonSolid>
+                  <ButtonHollow onClick={handleConfirm}>確認</ButtonHollow>
+                </DialogActions>
+              </Dialog>
               <Box
                 sx={{
                   display: "flex",
@@ -424,7 +544,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                 }}
               >
                 {userTopicStance
-                  .filter((topic) => topic.score !== null)
+                  .filter((topic) => topic.score !== null && topic.stances.length > 0)
                   .map((topic) => (
                     <Box
                       sx={{
@@ -453,7 +573,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         value={Math.round((topic.score as number) * 100)}
                         disabled
                         valueLabelDisplay="on"
-                        valueLabelFormat={(value) => Math.abs(value - 50)}
+                        valueLabelFormat={(value) => Math.abs(value)}
                         marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
                       />
                       <Box

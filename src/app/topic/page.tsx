@@ -21,14 +21,6 @@ export default function TopicsPage() {
           pt: 2,
         }}
       >
-        <Typography
-          variant="h2"
-          gutterBottom
-          textAlign={"left"}
-          sx={{ width: "100%" }}
-        >
-          熱門話題分類
-        </Typography>
         <TopicsChart />
       </Box>
     </Container>

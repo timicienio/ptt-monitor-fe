@@ -605,6 +605,11 @@ export interface operations {
   };
   /** Browse Topic */
   browse_topic_topic_get: {
+    parameters: {
+      query?: {
+        record_date?: string;
+      };
+    };
     responses: {
       /** @description Successful Response */
       200: {
@@ -862,6 +867,9 @@ export interface operations {
   /** Get User Topic Stance */
   get_user_topic_stance_user__user_id__topic_stance_get: {
     parameters: {
+      query?: {
+        record_date?: string;
+      };
       path: {
         user_id: string;
       };
