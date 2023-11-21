@@ -147,7 +147,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
                   gap: 1,
                 }}
               >
-                <Typography sx={{ minWidth: "80px", fontWeight: "bold" }}>
+                <Typography sx={{ width: "30", fontWeight: "bold" }}>
                   {topicStance[0]?.name}
                 </Typography>
                 <Typography sx={{}}>-</Typography>
@@ -162,7 +162,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
                     gap: 1,
                   }}
                 >
-                  <Typography sx={{ minWidth: "80px", fontWeight: "bold" }}>
+                  <Typography sx={{ width: "30", fontWeight: "bold" }}>
                     {topicStance[1]?.name}
                   </Typography>
                   <Typography sx={{}}>-</Typography>

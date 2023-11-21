@@ -1,26 +1,30 @@
 "use client";
 
 import useTopics from "@/lib/topic/useTopics";
-import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import useTrainRecord from "@/lib/trainRecord/useTrainRecord";
+import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem } from "@mui/material";
 import { CirclePacking } from "@nivo/circle-packing";
 import { useRouter } from "next/navigation";
 import React, { memo, useState } from "react";
 import ButtonSolid from "@/components/ButtonSolid";
 import ButtonHollow from "@/components/ButtonHollow";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 
 function TopicsChart() {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [tempDate, setTempDate] = useState(null); 
+  const [tempDate, setTempDate] = useState<string | null>(null);
 
   const formattedDate = selectedDate ? dayjs(selectedDate).format("YYYY-MM-DD") : undefined;
   const { data } = useTopics({ record_date: formattedDate });
-  
+
+  const { data: trainRecord } = useTrainRecord();
+  const useTrainRecords = trainRecord?.data;
+
+  console.log(trainRecord);
+  console.log(useTrainRecords);
+
   const router = useRouter();
   const [zoomedTopicId, setZoomedTopicId] = useState<string | null>(null);
 
@@ -42,9 +46,18 @@ function TopicsChart() {
     setTempDate(null);
   };
 
-  const formatDateForButton = (date: Day | null): string => {
+  const formatDateForButton = (date: string | null): string => {
     return date ? dayjs(date).format("YYYY-MM-DD") : "今日";
   };  
+
+  const buttonStyle = {
+    width: "130px",
+    border: "1px solid #3B8EA5",
+    borderRadius: "5px",
+    color: "secondary.dark",
+    backgroundColor: selectedDate && selectedDate !== dayjs().format("YYYY-MM-DD") ? "#D7F8F9" : "none"
+  };
+  
 
   const chartData = {
     id: "root",
@@ -97,12 +110,7 @@ function TopicsChart() {
         >
           <Button 
             onClick={handleOpenDialog}
-            sx={{
-              width: "130px",
-              border: "1px solid #3B8EA5",
-              borderRadius: "5px",
-              color: "secondary.dark",
-            }}
+            sx={buttonStyle}
           >
             <ScheduleIcon 
               sx={{
@@ -138,16 +146,19 @@ function TopicsChart() {
             >
               選擇不同的日期，以查看該時間點下的熱門話題分類結果。
             </Typography>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="更改日期"
-                value={tempDate}
-                onChange={(newValue) => setTempDate(newValue)}
-                sx={{ 
-                  width: "100%",
-                }}
-              />
-            </LocalizationProvider>
+            <Select
+              value={tempDate}
+              onChange={(e) => setTempDate(e.target.value as string)}
+              sx={{ 
+                width: "100%",
+              }}
+            >
+              {useTrainRecords && useTrainRecords.map((date: string, index: number) => (
+                <MenuItem key={index} value={date}>
+                  {date}
+                </MenuItem>
+              ))}
+            </Select>
           </DialogContent>
           <DialogActions
             sx={{

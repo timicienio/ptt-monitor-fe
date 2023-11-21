@@ -27,6 +27,8 @@ import {
   DialogActions, 
   DialogContent, 
   DialogTitle,
+  Select, 
+  MenuItem 
 } from "@mui/material";
 import useUsers from "@/lib/user/useUsers";
 import useUserTopics from "@/lib/topic/useUserTopics";
@@ -37,9 +39,7 @@ import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import useUserUserGroup from "@/lib/user/useUserUserGroup";
 import StanceIndicator from "@/components/StanceIndicator";
 import useUserGroup from "@/lib/userGroup/useUserGroup";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import useTrainRecord from "@/lib/trainRecord/useTrainRecord";
 import dayjs from 'dayjs';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 
@@ -50,9 +50,9 @@ const commentTypeToSymbol = {
 };
 
 export default function UserPage({ params }: { params: { userId: string } }) {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [tempDate, setTempDate] = useState(null); 
+  const [tempDate, setTempDate] = useState<string | null>(null);
 
   const formattedDate = selectedDate ? dayjs(selectedDate).format("YYYY-MM-DD") : undefined;
   const query = formattedDate ? { record_date: formattedDate } : undefined;
@@ -84,6 +84,9 @@ export default function UserPage({ params }: { params: { userId: string } }) {
     userUserGroupData?.data.group_id
   );
 
+  const { data: trainRecord } = useTrainRecord();
+
+  const useTrainRecords = trainRecord?.data;
   const user = data?.data;
   const userTopics = userTopicsData?.data.topics ?? [];
   const userPosts = userPostsData?.data.posts ?? [];
@@ -111,9 +114,17 @@ export default function UserPage({ params }: { params: { userId: string } }) {
     setTempDate(null);
   };
 
-  const formatDateForButton = (date: Day | null): string => {
+  const formatDateForButton = (date: string | null): string => {
     return date ? dayjs(date).format("YYYY-MM-DD") : "今日";
   };  
+
+  const buttonStyle = {
+    width: "130px",
+    border: "1px solid #3B8EA5",
+    borderRadius: "5px",
+    color: "secondary.dark",
+    backgroundColor: selectedDate && selectedDate !== dayjs().format("YYYY-MM-DD") ? "#D7F8F9" : "none"
+  };
 
   useEffect(
     /** Go to user page when search value is set. */
@@ -469,12 +480,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               <Box>
                 <Button 
                   onClick={handleOpenDialog}
-                  sx={{
-                    width: "130px",
-                    border: "1px solid #3B8EA5",
-                    borderRadius: "5px",
-                    color: "secondary.dark",
-                  }}
+                  sx={buttonStyle}
                 >
                   <ScheduleIcon 
                     sx={{
@@ -509,18 +515,21 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                       mb: "30px",
                     }}
                   >
-                    選擇不同的日期，以查看該時間點下的熱門話題立場結果。
+                    選擇不同的日期，以查看該時間點下的熱門話題分類結果。
                   </Typography>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      label="更改日期"
-                      value={tempDate}
-                      onChange={(newValue) => setTempDate(newValue)}
-                      sx={{ 
-                        width: "100%",
-                      }}
-                    />
-                  </LocalizationProvider>
+                  <Select
+                    value={tempDate}
+                    onChange={(e) => setTempDate(e.target.value as string)}
+                    sx={{ 
+                      width: "100%",
+                    }}
+                  >
+                    {useTrainRecords && useTrainRecords.map((date: string, index: number) => (
+                      <MenuItem key={index} value={date}>
+                        {date}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </DialogContent>
                 <DialogActions
                   sx={{

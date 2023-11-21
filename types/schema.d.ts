@@ -57,7 +57,7 @@ export interface paths {
     /** Browse User */
     get: operations["browse_user_user_get"];
   };
-  "/active-user": {
+  "/active-user": {f
     /** Browse Active User */
     get: operations["browse_active_user_active_user_get"];
   };
@@ -96,6 +96,10 @@ export interface paths {
   "/user-group/{group_id}/active-topic": {
     /** Browse User Group Active Topic */
     get: operations["browse_user_group_active_topic_user_group__group_id__active_topic_get"];
+  };
+  "/train-record": {
+    /** Browse Train Record Date */
+    get: operations["browse_train_record__get_train_record"];
   };
 }
 
@@ -510,6 +514,12 @@ export interface components {
       /** Keywords */
       keywords: components["schemas"]["Keyword"][];
     };
+    /** Train Record */
+    TrainRecord: {
+      /** Date */
+      dates: string;
+    };
+
   };
   responses: never;
   parameters: never;
@@ -1078,6 +1088,23 @@ export interface operations {
       200: {
         content: {
           "application/json": components["schemas"]["BrowseUserGroupActiveTopicOutput"][];
+        };
+      };
+      /** @description Validation Error */
+      422: {
+        content: {
+          "application/json": components["schemas"]["HTTPValidationError"];
+        };
+      };
+    };
+  };
+  /** Get Train Records */
+  train_record_get: {
+    responses: {
+      /** @description Successful Response */
+      200: {
+        content: {
+          "application/json": components["schemas"]["TrainRecord"];
         };
       };
       /** @description Validation Error */
