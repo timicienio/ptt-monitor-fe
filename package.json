@@ -21,6 +21,7 @@
     "@nivo/circle-packing": "^0.83.0",
     "@types/lodash": "^4.14.197",
     "@uidotdev/usehooks": "^2.2.0",
+    "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "next": "^13.5.4",
