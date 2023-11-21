@@ -11,21 +11,21 @@ import  { Box, Typography, Card, CardContent, CardActions, Button, Avatar } from
 const cardData = [
     {
       title: "熱門話題",
-      description: "Sample text. Click to select the text box. Click again or double click to start editing the text.",
+      description: "瞭解人們在談論什麼，他們所擁護的立場，以及誰正在引領這場討論。",
       buttonText: "Explore",
       icon: <ChatBubbleOutlineOutlinedIcon />,
       route: '/topic'
     },
     {
-      title: "使用者",
-      description: "Sample text. Click to select the text box. Click again or double click to start editing the text.",
+      title: "使用者分析",
+      description: "查看個別用戶的動態，他們對話題的觀點傾向，以及他們與誰站在同一陣線。",
       buttonText: "Explore",
       icon: <PermIdentityOutlinedIcon />,
       route: '/user'
     },
     {
-      title: "使用者群體",
-      description: "Sample text. Click to select the text box. Click again or double click to start editing the text.",
+      title: "使用者群體分析",
+      description: "視覺化使用者關係網絡，識別具有相似活動和立場模式的使用者群體，並瞭解這些群體的特性。",
       buttonText: "Explore",
       icon: <GroupsOutlinedIcon />,
       route: '/user-group'
@@ -33,7 +33,6 @@ const cardData = [
 ];
 
 function Cards() {
-    console.log('Rendering Cards component');
     const router = useRouter();
 
     return (
@@ -51,6 +50,7 @@ function Cards() {
         >
             {cardData.map((card, index) => (
                 <Card 
+                    elevation={0}
                     key={index} 
                     sx={{ 
                         height: '350px',
@@ -84,6 +84,7 @@ function Cards() {
                         <Typography 
                             sx={{ 
                                 mt: '25px',
+                                px: '20px',
                                 textAlign: 'center',
                             }}
                         >

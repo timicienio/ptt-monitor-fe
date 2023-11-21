@@ -1,39 +1,13 @@
 import React from "react";
-import  { Box, Typography, Card, CardContent, CardActions, Button, Avatar } from "@mui/material";
+import  { Box, Typography, Card, CardContent } from "@mui/material";
 import { Inconsolata } from "next/font/google";
-import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
-import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+
 import Cards from './Cards';
 
 const inconsolata = Inconsolata({
   display: "swap",
   subsets: ['latin']
 });
-
-const cardData = [
-    {
-      title: "熱門話題",
-      description: "Sample text. Click to select the text box. Click again or double click to start editing the text.",
-      buttonText: "Explore",
-      icon: <ChatBubbleOutlineOutlinedIcon />,
-      route: '/topic'
-    },
-    {
-      title: "使用者",
-      description: "Sample text. Click to select the text box. Click again or double click to start editing the text.",
-      buttonText: "Explore",
-      icon: <PermIdentityOutlinedIcon />,
-      route: '/user'
-    },
-    {
-      title: "使用者群體",
-      description: "Sample text. Click to select the text box. Click again or double click to start editing the text.",
-      buttonText: "Explore",
-      icon: <GroupsOutlinedIcon />,
-      route: '/user-group'
-    }
-];
   
 const descriptionData = [
     {
@@ -51,21 +25,12 @@ const descriptionData = [
 ];
 
 export default function HomePage() {
-  const cardStyle = {
-    position: 'absolute', 
-    bottom: '-60px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    width: '300px', 
-    bgcolor: 'background.paper',
-  };
-
   return (
     <Box>
         <Box
         sx={{
             position: 'relative',
-            height: '100vh',
+            height: '80vh',
             width: '100%',
             bgcolor: 'primary.contrastText',
             display: 'flex', 
@@ -74,29 +39,27 @@ export default function HomePage() {
             paddingTop: '20vh',
         }}
         >
-            <Box>
+            <Box sx={{ mb: "40px",}}>
                 <Typography
                     variant="h1"
                     sx={{ 
                         textDecoration: "none", 
                         fontFamily: inconsolata.style.fontFamily, 
-                        fontWeight: "300",
+                        fontWeight: "100",
                         width: "100%",
                         textShadow: "-1.5px -1.5px #82CEDD, -1px -1px #82CEDD",
                     }}
                     color="secondary.contrastText"
                     textAlign={"center"}
                 >
-                ADAPTT
+                    ADAPTT
                 </Typography>
-            </Box>
-            <Box>
                 <Typography
                     variant="h2"
                     sx={{ 
                         textDecoration: "none", 
                         fontFamily: inconsolata.style.fontFamily,
-                        fontWeight: "200",
+                        fontWeight: "800",
                         width: "100%",
                         marginTop: "10px",
                     }}
@@ -105,20 +68,21 @@ export default function HomePage() {
                 >
                     AI-Driven Analysis for PTT
                 </Typography>
+            </Box>
+            <Box>
                 <Typography
                     variant="h3"
                     sx={{ 
                         textDecoration: "none", 
                         fontFamily: inconsolata.style.fontFamily,
-                        fontWeight: "100",
+                        fontWeight: "400",
                         width: "70%",
                         marginLeft: "15%",
-                        marginTop: "20px",
                     }}
                     color="secondary.contrastText"
                     textAlign={"center"}
                 >
-                    Sample text. Click to select the text box. Click again or double click to start editing the text. Sample text. Click to select the text box. Click again or double click to start editing the text. Sample text.
+                    由先進 AI 技術驅動，讓你掌握最新話題趨勢，深入洞察論壇生態，並保護自己免於網路輿論操作的影響。
                 </Typography>
             </Box>
             <Box>
