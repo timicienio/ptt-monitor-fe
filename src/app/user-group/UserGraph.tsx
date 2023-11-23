@@ -209,6 +209,16 @@ function UserGraph() {
     networkRef.current?.moveTo({ scale: 0.09 });
   }, [networkRef.current]);
 
+  const handleUserGroupDetails = () => {
+    if (selectedUserGroupId) {
+      const url = selectedDate 
+        ? `/user-group/${selectedUserGroupId}?record_date=${selectedDate}`
+        : `/user-group/${selectedUserGroupId}`;
+  
+      router.push(url);
+    }
+  };    
+
   return (
     <Box>
       <Box 
@@ -334,7 +344,7 @@ function UserGraph() {
               : "全部使用者群體"}
           </Typography>
           <ButtonHollow
-            onClick={() => router.push(`/user-group/${selectedUserGroupId}`)}
+            onClick={handleUserGroupDetails}
             disabled={!selectedUserGroupId}
           >
             使用者群體詳情
