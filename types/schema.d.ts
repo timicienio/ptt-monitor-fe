@@ -929,6 +929,7 @@ export interface operations {
     parameters: {
       query?: {
         record_id?: number | null;
+        record_date?: string;
       };
     };
     responses: {

@@ -94,7 +94,16 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const userTopicStance = useUserStanceData?.data.topics ?? [];
   const userGroup = userGroupData?.data;
 
-  console.log('userTopicStance:', userTopicStance);
+  useEffect(() => {
+    if (useTrainRecords && useTrainRecords.length > 0) {
+      const sortedDates = [...useTrainRecords].sort((a, b) => dayjs(b).unix() - dayjs(a).unix());
+      setSelectedDate(sortedDates[0]);
+    }
+  }, [useTrainRecords]);
+
+  const formatDateForButton = (date: string | null): string => {
+    return date ? dayjs(date).format("YYYY-MM-DD") : (useTrainRecords && useTrainRecords.length > 0) ? useTrainRecords[0] : '';
+  };
 
   const handleOpenDialog = () => {
     setTempDate(selectedDate); 
@@ -113,10 +122,6 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const handleReset = () => {
     setTempDate(null);
   };
-
-  const formatDateForButton = (date: string | null): string => {
-    return date ? dayjs(date).format("YYYY-MM-DD") : "今日";
-  };  
 
   const buttonStyle = {
     width: "130px",
@@ -438,17 +443,17 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                 }}
               >
                 {userTopics && userTopics.length > 0 ? (
-                  userTopics.map((topic) => (
-                    <Chip
-                      key={topic.id} // Remember to use a key when mapping in React
-                      variant="outlined"
-                      component="a"
-                      href={`/topic/${topic.id}`}
-                      label={`${topic.keywords.at(0)?.name}, ${
-                        topic.keywords.at(1)?.name
-                      }`}
-                    />
-                  ))
+                  userTopics.map((topic) => 
+                    topic.keywords.at(0)?.name ? ( // Check if the first keyword name is not undefined
+                      <Chip
+                        key={topic.id}
+                        variant="outlined"
+                        component="a"
+                        href={`/topic/${topic.id}`}
+                        label={`${topic.keywords.at(0)?.name}, ${topic.keywords.at(1)?.name}`}
+                      />
+                    ) : null
+                  )
                 ) : (
                   <Typography sx={{ marginTop: "5px" }}>無</Typography>
                 )}
@@ -518,11 +523,9 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                     選擇不同的日期，以查看該時間點下的熱門話題分類結果。
                   </Typography>
                   <Select
-                    value={tempDate}
+                    value={tempDate || formatDateForButton(selectedDate)}
                     onChange={(e) => setTempDate(e.target.value as string)}
-                    sx={{ 
-                      width: "100%",
-                    }}
+                    sx={{ width: "100%" }}
                   >
                     {useTrainRecords && useTrainRecords.map((date: string, index: number) => (
                       <MenuItem key={index} value={date}>

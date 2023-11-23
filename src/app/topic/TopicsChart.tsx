@@ -4,8 +4,8 @@ import useTopics from "@/lib/topic/useTopics";
 import useTrainRecord from "@/lib/trainRecord/useTrainRecord";
 import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem } from "@mui/material";
 import { CirclePacking } from "@nivo/circle-packing";
-import { useRouter } from "next/navigation";
-import React, { memo, useState } from "react";
+import { useRouter, } from "next/navigation";
+import React, { memo, useState, useEffect } from "react";
 import ButtonSolid from "@/components/ButtonSolid";
 import ButtonHollow from "@/components/ButtonHollow";
 import dayjs from 'dayjs';
@@ -16,14 +16,22 @@ function TopicsChart() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [tempDate, setTempDate] = useState<string | null>(null);
 
-  const formattedDate = selectedDate ? dayjs(selectedDate).format("YYYY-MM-DD") : undefined;
-  const { data } = useTopics({ record_date: formattedDate });
-
   const { data: trainRecord } = useTrainRecord();
   const useTrainRecords = trainRecord?.data;
 
-  console.log(trainRecord);
-  console.log(useTrainRecords);
+  useEffect(() => {
+    if (useTrainRecords && useTrainRecords.length > 0) {
+      const sortedDates = [...useTrainRecords].sort((a, b) => dayjs(b).unix() - dayjs(a).unix());
+      setSelectedDate(sortedDates[0]);
+    }
+  }, [useTrainRecords]);
+
+  const formattedDate = selectedDate ? dayjs(selectedDate).format("YYYY-MM-DD") : undefined;
+  const { data } = useTopics({ record_date: formattedDate });
+
+  const formatDateForButton = (date: string | null): string => {
+    return date ? dayjs(date).format("YYYY-MM-DD") : (useTrainRecords && useTrainRecords.length > 0) ? useTrainRecords[0] : '';
+  };
 
   const router = useRouter();
   const [zoomedTopicId, setZoomedTopicId] = useState<string | null>(null);
@@ -45,10 +53,6 @@ function TopicsChart() {
   const handleReset = () => {
     setTempDate(null);
   };
-
-  const formatDateForButton = (date: string | null): string => {
-    return date ? dayjs(date).format("YYYY-MM-DD") : "今日";
-  };  
 
   const buttonStyle = {
     width: "130px",
@@ -147,11 +151,9 @@ function TopicsChart() {
               選擇不同的日期，以查看該時間點下的熱門話題分類結果。
             </Typography>
             <Select
-              value={tempDate}
+              value={tempDate || formatDateForButton(selectedDate)}
               onChange={(e) => setTempDate(e.target.value as string)}
-              sx={{ 
-                width: "100%",
-              }}
+              sx={{ width: "100%" }}
             >
               {useTrainRecords && useTrainRecords.map((date: string, index: number) => (
                 <MenuItem key={index} value={date}>

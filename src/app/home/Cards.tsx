@@ -53,7 +53,7 @@ function Cards() {
                     elevation={0}
                     key={index} 
                     sx={{ 
-                        height: '350px',
+                        height: '300px',
                         width: '300px', 
                         mb: '-70px', 
                         zIndex: 2,
@@ -65,9 +65,9 @@ function Cards() {
                             sx={{ 
                                 bgcolor: 'info.main', 
                                 margin: 'auto',
-                                width: '70px', 
-                                height: '70px',
-                                mt: '15px',
+                                width: '60px', 
+                                height: '60px',
+                                mt: '10px',
                             }}
                         >
                             {React.cloneElement(card.icon, { sx: { fontSize: '30px' } })}
@@ -75,7 +75,7 @@ function Cards() {
                         <Typography 
                             variant='h3'
                             sx={{ 
-                                mt: '25px',
+                                mt: '20px',
                                 textAlign: 'center',
                             }}
                         >
@@ -83,7 +83,7 @@ function Cards() {
                         </Typography>
                         <Typography 
                             sx={{ 
-                                mt: '25px',
+                                mt: '18px',
                                 px: '20px',
                                 textAlign: 'center',
                             }}
@@ -105,7 +105,7 @@ function Cards() {
                                 color: 'info.main',
                                 fontSize: 20,
                                 fontWeight: 700,
-                                mt: '10px',
+                                mt: '-7px',
                                 '&:hover': {
                                     backgroundColor: 'info.light', 
                                     boxShadow: 'none', 

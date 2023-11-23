@@ -36,7 +36,7 @@ export default function HomePage() {
             display: 'flex', 
             flexDirection: 'column', 
             justifyContent: 'flex-start', 
-            paddingTop: '20vh',
+            paddingTop: '12vh',
         }}
         >
             <Box sx={{ mb: "40px",}}>
@@ -78,6 +78,7 @@ export default function HomePage() {
                         fontWeight: "400",
                         width: "70%",
                         marginLeft: "15%",
+                        marginTop: "-10px",
                     }}
                     color="secondary.contrastText"
                     textAlign={"center"}
@@ -91,11 +92,11 @@ export default function HomePage() {
         </Box>
         <Box
             sx={{
-                height: '170vh',
+                height: '160vh',
                 width: '100%',
                 bgcolor: '#82CEDD',
                 zIndex: 1,
-                paddingTop: '30vh',
+                paddingTop: '24vh',
             }}
         >
             <Card
@@ -151,7 +152,7 @@ export default function HomePage() {
             <Card
                 sx={{
                     ml: '10%',
-                    mb: '60px',
+                    mb: '0px',
                     width: '70%',
                     p: 3,
                     boxShadow: 'none',
