@@ -5,7 +5,12 @@ import TopicsChart from "./TopicsChart";
 
 export default function TopicsPage() {
   return (
-    <Container>
+    <Container
+      sx={{
+        mt: ["48px", "56px", "64px"],
+        p: 3,
+      }}
+    >
       <Box
         sx={{
           height: "100%",
@@ -16,14 +21,6 @@ export default function TopicsPage() {
           pt: 2,
         }}
       >
-        <Typography
-          variant="h2"
-          gutterBottom
-          textAlign={"left"}
-          sx={{ width: "100%" }}
-        >
-          熱門話題分類
-        </Typography>
         <TopicsChart />
       </Box>
     </Container>

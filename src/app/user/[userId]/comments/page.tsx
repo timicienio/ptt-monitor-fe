@@ -51,7 +51,12 @@ const UserPostsPage = ({ params }: { params: { userId: string } }) => {
   const router = useRouter();
 
   return (
-    <Container>
+    <Container
+      sx={{
+        mt: ["48px", "56px", "64px"],
+        p: 3,
+      }}
+    >
       <Box
         sx={{
           height: "100%",

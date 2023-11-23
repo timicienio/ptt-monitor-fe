@@ -5,7 +5,12 @@ export const dynamic = "force-dynamic";
 
 export default function UserGroupOverviewPage() {
   return (
-    <Container>
+    <Container
+      sx={{
+        mt: ["48px", "56px", "64px"],
+        p: 3,
+      }}
+    >
       <Box
         sx={{
           height: "100%",
@@ -16,14 +21,6 @@ export default function UserGroupOverviewPage() {
           pt: 2,
         }}
       >
-        <Typography
-          variant="h2"
-          gutterBottom
-          textAlign={"left"}
-          sx={{ width: "100%" }}
-        >
-          使用者群體
-        </Typography>
         <UserGraph />
       </Box>
     </Container>
