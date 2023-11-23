@@ -61,8 +61,8 @@ function TopicsChart() {
     color: "secondary.dark",
     backgroundColor: selectedDate && selectedDate !== dayjs().format("YYYY-MM-DD") ? "#D7F8F9" : "none"
   };
-  
 
+  
   const chartData = {
     id: "root",
     value: 1,

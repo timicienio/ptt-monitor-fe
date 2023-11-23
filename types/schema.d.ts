@@ -950,9 +950,10 @@ export interface operations {
   /** Read User Neighbor */
   read_user_neighbor_user_graph_neighbor_get: {
     parameters: {
-      query: {
+      query?: {
         user_id: string;
         record_id?: number | null;
+        record_date?: string;
       };
     };
     responses: {
@@ -975,6 +976,7 @@ export interface operations {
     parameters: {
       query?: {
         record_id?: number | null;
+        record_date?: string;
       };
       path: {
         group_id: number;
@@ -1000,6 +1002,7 @@ export interface operations {
     parameters: {
       query?: {
         record_id?: number | null;
+        record_date?: string;
       };
       path: {
         group_id: number;
@@ -1027,6 +1030,7 @@ export interface operations {
         limit?: number | null;
         offset?: number | null;
         record_id?: number | null;
+        record_date?: string;
       };
       path: {
         group_id: number;
@@ -1052,6 +1056,7 @@ export interface operations {
     parameters: {
       query?: {
         record_id?: number | null;
+        record_date?: string;
       };
       path: {
         group_id: number;
@@ -1079,6 +1084,7 @@ export interface operations {
         limit?: number | null;
         offset?: number | null;
         record_id?: number | null;
+        record_date?: string;
       };
       path: {
         group_id: number;

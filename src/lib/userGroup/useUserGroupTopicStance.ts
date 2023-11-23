@@ -1,10 +1,15 @@
 import useSWR from "swr";
 import { browseUserGroupTopicStance, readUserGroup } from "./fetchers";
 
-export default function useUserGroupTopicStance(userGroupId: number) {
+export default function useUserGroupTopicStance(
+  userGroupId: number,
+  query?: {
+    record_date?: string; 
+  }
+  ) {
   const userGroupTopicStanceSWR = useSWR(
-    ["userGroupTopicStance", userGroupId],
-    () => browseUserGroupTopicStance({ group_id: userGroupId, record_id: 16 })
+    ["userGroupTopicStance", userGroupId, JSON.stringify(query)],
+    () => browseUserGroupTopicStance({ group_id: userGroupId, ...query })
   );
 
   return userGroupTopicStanceSWR;

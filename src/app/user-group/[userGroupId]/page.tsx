@@ -1,6 +1,5 @@
 "use client";
 
-import useTopic from "@/lib/topic/useTopic";
 import {
   Container,
   Box,
@@ -16,16 +15,28 @@ import useUserGroupActiveUsers from "@/lib/userGroup/useUserGroupActiveUsers";
 import useUserGroupTopicStance from "@/lib/userGroup/useUserGroupTopicStance";
 import StanceIndicator from "@/components/StanceIndicator";
 import useUserGroupActiveTopics from "@/lib/userGroup/useUserGroupActiveTopics";
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 export default function UserGroupPage({
   params: { userGroupId },
 }: {
   params: { userGroupId: number };
 }) {
-  const { data: userGroupData } = useUserGroup(userGroupId);
-  const { data: activeUsersData } = useUserGroupActiveUsers(userGroupId);
-  const { data: activeTopicsData } = useUserGroupActiveTopics(userGroupId);
-  const { data: topicStanceData } = useUserGroupTopicStance(userGroupId);
+  const [recordDate, setRecordDate] = useState<string | null>(null);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const record_date = queryParams.get('record_date');
+    setRecordDate(record_date);
+  }, []);
+
+  const recordDateParam = recordDate ? { record_date: recordDate } : undefined;
+
+  const { data: userGroupData } = useUserGroup(userGroupId, recordDateParam);
+  const { data: activeUsersData } = useUserGroupActiveUsers(userGroupId, recordDateParam);
+  const { data: activeTopicsData } = useUserGroupActiveTopics(userGroupId, recordDateParam);
+  const { data: topicStanceData } = useUserGroupTopicStance(userGroupId, recordDateParam);
 
   const userGroup = userGroupData?.data ?? [];
   const activeUsers = activeUsersData?.data ?? [];
@@ -33,7 +44,12 @@ export default function UserGroupPage({
   const topicStance = topicStanceData?.data;
 
   return (
-    <Container>
+    <Container
+      sx={{
+        mt: ["48px", "56px", "64px"],
+        p: 3,
+      }}
+    >
       <Box
         sx={{
           height: "100%",
