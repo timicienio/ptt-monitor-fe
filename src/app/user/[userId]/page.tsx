@@ -122,7 +122,10 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   };
 
   const handleReset = () => {
-    setTempDate(null);
+    if (useTrainRecords && useTrainRecords.length > 0) {
+        setSelectedDate(useTrainRecords[0]);
+    }
+    setDialogOpen(false);
   };
 
   const handleNextDate = () => {
@@ -474,7 +477,8 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                           href={`/user/${user.user_id}`}
                           label={user.user_id}
                         />
-                      )) ?? <Typography variant="body2">無</Typography>}
+                      )) ?? <Typography variant="body2">無</Typography>
+                    }
                   </Box>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>

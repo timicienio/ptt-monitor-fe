@@ -59,7 +59,10 @@ function UserGraph() {
   };
 
   const handleReset = () => {
-    setTempDate(null);
+    if (useTrainRecords && useTrainRecords.length > 0) {
+        setSelectedDate(useTrainRecords[0]);
+    }
+    setDialogOpen(false);
   };
 
   const handleNextDate = () => {
