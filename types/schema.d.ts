@@ -805,6 +805,9 @@ export interface operations {
   /** Browse User Topics */
   browse_user_topics_user__user_id__topic_get: {
     parameters: {
+      query?: {
+        record_date?: string;
+      };
       path: {
         user_id: string;
       };

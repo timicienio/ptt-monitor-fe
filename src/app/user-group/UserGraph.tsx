@@ -4,11 +4,13 @@ import ButtonHollow from "@/components/ButtonHollow";
 import ButtonSolid from "@/components/ButtonSolid";
 import useUserGraph from "@/lib/userGraph/useUserGraph";
 import useTrainRecord from "@/lib/trainRecord/useTrainRecord";
-import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem } from "@mui/material";
+import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, IconButton } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from 'dayjs';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 import VisGraph, {
   Network,
@@ -59,6 +61,25 @@ function UserGraph() {
   const handleReset = () => {
     setTempDate(null);
   };
+
+  const handleNextDate = () => {
+    const currentIndex = useTrainRecords.findIndex((date: string) => date === selectedDate);
+    const nextDateIndex = currentIndex - 1;
+    if (nextDateIndex >= 0) {
+      setSelectedDate(useTrainRecords[nextDateIndex]);
+    }
+  };
+  
+  const handlePreviousDate = () => {
+    const currentIndex = useTrainRecords.findIndex((date: string) => date === selectedDate);
+    const prevDateIndex = currentIndex + 1;
+    if (prevDateIndex < useTrainRecords.length) {
+      setSelectedDate(useTrainRecords[prevDateIndex]);
+    }
+  };  
+
+  const isLastDate = useTrainRecords && useTrainRecords.length > 0 && selectedDate === useTrainRecords[0];
+  const isFirstDate = useTrainRecords && useTrainRecords.length > 0 && selectedDate === useTrainRecords[useTrainRecords.length - 1];
 
   const buttonStyle = {
     width: "130px",
@@ -240,8 +261,18 @@ function UserGraph() {
         <Box
           sx={{
             mr: -5,
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
           }}
         >
+          <IconButton 
+            onClick={handlePreviousDate}
+            disabled={isFirstDate}
+            sx={{ marginRight: "5px" }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
           <Button 
             onClick={handleOpenDialog}
             sx={buttonStyle}
@@ -253,6 +284,13 @@ function UserGraph() {
             />
             {formatDateForButton(selectedDate)}
           </Button>
+          <IconButton 
+            onClick={handleNextDate}
+            disabled={isLastDate}
+            sx={{ marginLeft: "5px" }}
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
         </Box>
         <Dialog 
           open={dialogOpen} 
