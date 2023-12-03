@@ -146,6 +146,10 @@ export interface components {
       size: number;
       /** Keywords */
       keywords: components["schemas"]["Keyword"][];
+      /** Name */
+      name: string;
+      /** Description */
+      description: string;
     };
     /** BrowseTopicOutput */
     BrowseTopicOutputOutput: {
@@ -249,6 +253,8 @@ export interface components {
       /** Keywords */
       keywords: components["schemas"]["Keyword"][];
       meta: components["schemas"]["MetaData"];
+      name: string;
+      description: string;
     };
     /** ReadUserGraphByGroupIdOutput */
     ReadUserGraphByGroupIdOutput: {

@@ -261,11 +261,7 @@ function TopicsChart() {
           <Typography variant="h5">
             {zoomedTopicId
               ? `熱門話題: ${
-                  data?.data.topics.at(Number(zoomedTopicId))?.keywords.at(0)
-                    ?.name
-                }, ${
-                  data?.data.topics.at(Number(zoomedTopicId))?.keywords.at(1)
-                    ?.name
+                  data?.data.topics.at(Number(zoomedTopicId))?.name
                 }`
               : "全部話題"}
           </Typography>

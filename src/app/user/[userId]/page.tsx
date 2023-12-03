@@ -533,7 +533,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         variant="outlined"
                         component="a"
                         href={`/topic/${topic.id}`}
-                        label={`${topic.keywords.at(0)?.name}, ${topic.keywords.at(1)?.name}`}
+                        label={`${topic.keywords.at(0)?.name}`}
                       />
                     ) : null
                   )
@@ -591,13 +591,8 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                       sx={{ transform: "translateX(-5px)", width: "100%" }}
                     >
                       {(() => {
-                        const keywords =
-                          userTopics.find(
-                            (userTopic) => userTopic.id === topic.id
-                          )?.keywords ?? [];
-                        return `${keywords.at(0)?.name ?? ""}, ${
-                          keywords.at(1)?.name ?? ""
-                        }`;
+                        const keywords = userTopics.find((userTopic) => userTopic.id === topic.id) ?? { name: "" };
+                        return `${keywords.name}`;
                       })()}
                     </Typography>
                     <StanceIndicator
