@@ -259,11 +259,13 @@ function TopicsChart() {
             返回全部話題
           </ButtonSolid>
           <Typography variant="h5">
-            {zoomedTopicId
+          {
+            zoomedTopicId
               ? `熱門話題: ${
-                  data?.data.topics.at(Number(zoomedTopicId))?.name
+                  data?.data.topics.find(topic => topic.id === Number(zoomedTopicId))?.name ?? ""
                 }`
-              : "全部話題"}
+              : "全部話題"
+          }
           </Typography>
           <ButtonHollow
             onClick={() => router.push(`/topic/${zoomedTopicId}`)}
