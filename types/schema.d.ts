@@ -146,6 +146,10 @@ export interface components {
       size: number;
       /** Keywords */
       keywords: components["schemas"]["Keyword"][];
+      /** Name */
+      name: string;
+      /** Description */
+      description: string;
     };
     /** BrowseTopicOutput */
     BrowseTopicOutputOutput: {
@@ -249,6 +253,8 @@ export interface components {
       /** Keywords */
       keywords: components["schemas"]["Keyword"][];
       meta: components["schemas"]["MetaData"];
+      name: string;
+      description: string;
     };
     /** ReadUserGraphByGroupIdOutput */
     ReadUserGraphByGroupIdOutput: {
@@ -805,6 +811,9 @@ export interface operations {
   /** Browse User Topics */
   browse_user_topics_user__user_id__topic_get: {
     parameters: {
+      query?: {
+        record_date?: string;
+      };
       path: {
         user_id: string;
       };

@@ -61,8 +61,7 @@ export default function TopicPage({ params }: { params: { topicId: number } }) {
           textAlign={"left"}
           sx={{ flexShrink: 0, mr: 3 }}
         >
-          熱門話題: {data?.data.keywords.at(0)?.name},{" "}
-          {data?.data.keywords.at(1)?.name}
+          熱門話題: {data?.data.name}
         </Typography>
       </Box>
       <Card

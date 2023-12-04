@@ -10,7 +10,6 @@ import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useThrottle } from "@uidotdev/usehooks";
-import CustomTextField from "@/components/TextField";
 import ButtonSolid from "@/components/ButtonSolid";
 import ButtonHollow from "@/components/ButtonHollow";
 import {
@@ -22,13 +21,13 @@ import {
   List,
   ListItem,
   Button,
-  Autocomplete,
   Dialog, 
   DialogActions, 
   DialogContent, 
   DialogTitle,
   Select, 
-  MenuItem 
+  MenuItem,
+  IconButton,
 } from "@mui/material";
 import useUsers from "@/lib/user/useUsers";
 import useUserTopics from "@/lib/topic/useUserTopics";
@@ -42,6 +41,8 @@ import useUserGroup from "@/lib/userGroup/useUserGroup";
 import useTrainRecord from "@/lib/trainRecord/useTrainRecord";
 import dayjs from 'dayjs';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const commentTypeToSymbol = {
   PUSH: "推",
@@ -72,7 +73,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const { data } = useUser(params.userId);
   const { data: useUserStanceData } = useUserStance(params.userId, query);
   
-  const { data: userTopicsData } = useUserTopics(params.userId);
+  const { data: userTopicsData } = useUserTopics(params.userId, query);
   const { data: userPostsData, isLoading: userPostsIsLoading } = useUserPosts(
     params.userId
   );
@@ -81,7 +82,8 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   const { data: userUserGroupData } = useUserUserGroup(params.userId);
 
   const { data: userGroupData } = useUserGroup(
-    userUserGroupData?.data.group_id
+    userUserGroupData?.data.group_id,
+    query
   );
 
   const { data: trainRecord } = useTrainRecord();
@@ -120,8 +122,30 @@ export default function UserPage({ params }: { params: { userId: string } }) {
   };
 
   const handleReset = () => {
-    setTempDate(null);
+    if (useTrainRecords && useTrainRecords.length > 0) {
+        setSelectedDate(useTrainRecords[0]);
+    }
+    setDialogOpen(false);
   };
+
+  const handleNextDate = () => {
+    const currentIndex = useTrainRecords.findIndex((date: string) => date === selectedDate);
+    const nextDateIndex = currentIndex - 1;
+    if (nextDateIndex >= 0) {
+      setSelectedDate(useTrainRecords[nextDateIndex]);
+    }
+  };
+  
+  const handlePreviousDate = () => {
+    const currentIndex = useTrainRecords.findIndex((date: string) => date === selectedDate);
+    const prevDateIndex = currentIndex + 1;
+    if (prevDateIndex < useTrainRecords.length) {
+      setSelectedDate(useTrainRecords[prevDateIndex]);
+    }
+  };  
+
+  const isLastDate = useTrainRecords && useTrainRecords.length > 0 && selectedDate === useTrainRecords[0];
+  const isFirstDate = useTrainRecords && useTrainRecords.length > 0 && selectedDate === useTrainRecords[useTrainRecords.length - 1];
 
   const buttonStyle = {
     width: "130px",
@@ -192,26 +216,84 @@ export default function UserPage({ params }: { params: { userId: string } }) {
             </Box>
           </Box>
           <Box>
-            <Autocomplete
-              id="user-search"
-              value={searchValue}
-              onChange={(_, newValue) => setSearchValue(newValue)}
-              inputValue={searchInputValue}
-              onInputChange={(_, newInputValue) =>
-                setSearchInputValue(newInputValue)
-              }
-              options={users?.data.map((user) => user.id) ?? []}
-              renderInput={(params) => (
-                <CustomTextField label="查詢使用者名稱" {...params} />
-              )}
-              sx={{
-                width: 240,
-                "& .MuiAutocomplete-listbox": {
-                  borderRadius: "12px",
-                  borderColor: "primary.contrastText",
-                },
+            <Box>
+              <IconButton 
+                onClick={handlePreviousDate}
+                disabled={isFirstDate}
+                sx={{ marginRight: "5px" }}
+              >
+                <ArrowBackIosIcon />
+              </IconButton>
+              <Button 
+                onClick={handleOpenDialog}
+                sx={buttonStyle}
+              >
+                <ScheduleIcon 
+                  sx={{
+                    mr: "5px",
+                  }}
+                />
+                {formatDateForButton(selectedDate)}
+              </Button>
+              <IconButton 
+                onClick={handleNextDate}
+                disabled={isLastDate}
+                sx={{ marginLeft: "5px" }}
+              >
+                <ArrowForwardIosIcon />
+              </IconButton>
+            </Box>
+            <Dialog 
+              open={dialogOpen} 
+              onClose={handleCloseDialog}
+              PaperProps={{
+                sx: {
+                  marginTop: '-7%',
+                }
               }}
-            />
+            >
+              <DialogTitle
+                variant="h3"
+                sx={{
+                  mt: "5px",
+                  textAlign: "center",
+                }}
+              >
+                更改日期
+              </DialogTitle>
+              <DialogContent>
+                <Typography
+                  sx={{
+                    mb: "30px",
+                  }}
+                >
+                  選擇不同的日期，以查看該時間點下的熱門話題分類結果。
+                </Typography>
+                <Select
+                  value={tempDate || formatDateForButton(selectedDate)}
+                  onChange={(e) => setTempDate(e.target.value as string)}
+                  sx={{ width: "100%" }}
+                >
+                  {useTrainRecords && useTrainRecords.map((date: string, index: number) => (
+                    <MenuItem key={index} value={date}>
+                      {date}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </DialogContent>
+              <DialogActions
+                sx={{
+                  display: "flex",       
+                  justifyContent: "space-between",
+                  mb: "5px",
+                  mr: "17px",
+                  ml: "17px",
+                }}
+              >
+                <ButtonSolid onClick={handleReset}>重置</ButtonSolid>
+                <ButtonHollow onClick={handleConfirm}>確認</ButtonHollow>
+              </DialogActions>
+            </Dialog>
           </Box>
         </Box>
         <Box
@@ -395,7 +477,8 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                           href={`/user/${user.user_id}`}
                           label={user.user_id}
                         />
-                      )) ?? <Typography variant="body2">無</Typography>}
+                      )) ?? <Typography variant="body2">無</Typography>
+                    }
                   </Box>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
@@ -450,7 +533,7 @@ export default function UserPage({ params }: { params: { userId: string } }) {
                         variant="outlined"
                         component="a"
                         href={`/topic/${topic.id}`}
-                        label={`${topic.keywords.at(0)?.name}, ${topic.keywords.at(1)?.name}`}
+                        label={`${topic.keywords.at(0)?.name}`}
                       />
                     ) : null
                   )
@@ -482,145 +565,76 @@ export default function UserPage({ params }: { params: { userId: string } }) {
               <Typography variant="h3" sx={{ mb: 2 }}>
                 熱門話題立場
               </Typography>
-              <Box>
-                <Button 
-                  onClick={handleOpenDialog}
-                  sx={buttonStyle}
-                >
-                  <ScheduleIcon 
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 5,
+                flexWrap: "wrap",
+                alignItems: "flex-start",
+              }}
+            >
+              {userTopicStance
+                .filter((topic) => topic.score !== null && topic.stances.length > 0)
+                .map((topic) => (
+                  <Box
                     sx={{
-                      mr: "5px",
-                    }}
-                  />
-                  {formatDateForButton(selectedDate)}
-                </Button>
-              </Box>
-              </Box>
-              <Dialog 
-                open={dialogOpen} 
-                onClose={handleCloseDialog}
-                PaperProps={{
-                  sx: {
-                    marginTop: '-7%',
-                  }
-                }}
-              >
-                <DialogTitle
-                  variant="h3"
-                  sx={{
-                    mt: "5px",
-                    textAlign: "center",
-                  }}
-                >
-                  更改日期
-                </DialogTitle>
-                <DialogContent>
-                  <Typography
-                    sx={{
-                      mb: "30px",
+                      minWidth: 140,
+                      marginLeft: "22px",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
                     }}
                   >
-                    選擇不同的日期，以查看該時間點下的熱門話題分類結果。
-                  </Typography>
-                  <Select
-                    value={tempDate || formatDateForButton(selectedDate)}
-                    onChange={(e) => setTempDate(e.target.value as string)}
-                    sx={{ width: "100%" }}
-                  >
-                    {useTrainRecords && useTrainRecords.map((date: string, index: number) => (
-                      <MenuItem key={index} value={date}>
-                        {date}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </DialogContent>
-                <DialogActions
-                  sx={{
-                    display: "flex",       
-                    justifyContent: "space-between",
-                    mb: "5px",
-                    mr: "17px",
-                    ml: "17px",
-                  }}
-                >
-                  <ButtonSolid onClick={handleReset}>重置</ButtonSolid>
-                  <ButtonHollow onClick={handleConfirm}>確認</ButtonHollow>
-                </DialogActions>
-              </Dialog>
-              <Box
-                sx={{
-                  display: "flex",
-                  gap: 5,
-                  flexWrap: "wrap",
-                  alignItems: "flex-start",
-                }}
-              >
-                {userTopicStance
-                  .filter((topic) => topic.score !== null && topic.stances.length > 0)
-                  .map((topic) => (
+                    <Typography
+                      variant="h5"
+                      sx={{ transform: "translateX(-5px)", width: "100%" }}
+                    >
+                      {(() => {
+                        const keywords = userTopics.find((userTopic) => userTopic.id === topic.id) ?? { name: "" };
+                        return `${keywords.name}`;
+                      })()}
+                    </Typography>
+                    <StanceIndicator
+                      value={Math.round((topic.score as number) * 100)}
+                      disabled
+                      valueLabelDisplay="on"
+                      valueLabelFormat={(value) => Math.abs(value)}
+                      marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
+                    />
                     <Box
                       sx={{
-                        minWidth: 140,
-                        marginLeft: "22px",
+                        width: "110%",
                         display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                       }}
                     >
                       <Typography
-                        variant="h5"
-                        sx={{ transform: "translateX(-5px)", width: "100%" }}
-                      >
-                        {(() => {
-                          const keywords =
-                            userTopics.find(
-                              (userTopic) => userTopic.id === topic.id
-                            )?.keywords ?? [];
-                          return `${keywords.at(0)?.name ?? ""}, ${
-                            keywords.at(1)?.name ?? ""
-                          }`;
-                        })()}
-                      </Typography>
-                      <StanceIndicator
-                        value={Math.round((topic.score as number) * 100)}
-                        disabled
-                        valueLabelDisplay="on"
-                        valueLabelFormat={(value) => Math.abs(value)}
-                        marks={[{ value: 0 }, { value: 50 }, { value: 100 }]}
-                      />
-                      <Box
                         sx={{
-                          width: "110%",
-                          display: "flex",
-                          flexDirection: "row",
-                          justifyContent: "space-between",
+                          maxWidth: "70px",
+                          color: "black",
+                          marginTop: "10px",
+                          fontSize: "14px",
                         }}
                       >
-                        <Typography
-                          sx={{
-                            maxWidth: "70px",
-                            color: "black",
-                            marginTop: "10px",
-                            fontSize: "14px",
-                          }}
-                        >
-                          {topic.stances[0]?.name}
-                        </Typography>
-                        <Typography
-                          sx={{
-                            maxWidth: "70px",
-                            color: "black",
-                            marginTop: "10px",
-                            fontSize: "14px",
-                            textAlign: "right",
-                          }}
-                        >
-                          {topic.stances[1]?.name}
-                        </Typography>
-                      </Box>
+                        {topic.stances[0]?.name}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          maxWidth: "70px",
+                          color: "black",
+                          marginTop: "10px",
+                          fontSize: "14px",
+                          textAlign: "right",
+                        }}
+                      >
+                        {topic.stances[1]?.name}
+                      </Typography>
                     </Box>
-                  ))}
-              </Box>
+                  </Box>
+                ))}
+            </Box>
             </CardContent>
           </Card>
           <Card

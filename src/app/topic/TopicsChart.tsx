@@ -2,7 +2,7 @@
 
 import useTopics from "@/lib/topic/useTopics";
 import useTrainRecord from "@/lib/trainRecord/useTrainRecord";
-import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem } from "@mui/material";
+import { Box, Typography, Button, Dialog, DialogActions, DialogContent, DialogTitle, Select, MenuItem, IconButton } from "@mui/material";
 import { CirclePacking } from "@nivo/circle-packing";
 import { useRouter, } from "next/navigation";
 import React, { memo, useState, useEffect } from "react";
@@ -10,6 +10,8 @@ import ButtonSolid from "@/components/ButtonSolid";
 import ButtonHollow from "@/components/ButtonHollow";
 import dayjs from 'dayjs';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 function TopicsChart() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -51,8 +53,30 @@ function TopicsChart() {
   };
 
   const handleReset = () => {
-    setTempDate(null);
+    if (useTrainRecords && useTrainRecords.length > 0) {
+        setSelectedDate(useTrainRecords[0]);
+    }
+    setDialogOpen(false);
   };
+
+  const handleNextDate = () => {
+    const currentIndex = useTrainRecords.findIndex((date: string) => date === selectedDate);
+    const nextDateIndex = currentIndex - 1;
+    if (nextDateIndex >= 0) {
+      setSelectedDate(useTrainRecords[nextDateIndex]);
+    }
+  };
+  
+  const handlePreviousDate = () => {
+    const currentIndex = useTrainRecords.findIndex((date: string) => date === selectedDate);
+    const prevDateIndex = currentIndex + 1;
+    if (prevDateIndex < useTrainRecords.length) {
+      setSelectedDate(useTrainRecords[prevDateIndex]);
+    }
+  };  
+
+  const isLastDate = useTrainRecords && useTrainRecords.length > 0 && selectedDate === useTrainRecords[0];
+  const isFirstDate = useTrainRecords && useTrainRecords.length > 0 && selectedDate === useTrainRecords[useTrainRecords.length - 1];
 
   const buttonStyle = {
     width: "130px",
@@ -62,7 +86,6 @@ function TopicsChart() {
     backgroundColor: selectedDate && selectedDate !== dayjs().format("YYYY-MM-DD") ? "#D7F8F9" : "none"
   };
 
-  
   const chartData = {
     id: "root",
     value: 1,
@@ -110,8 +133,18 @@ function TopicsChart() {
         <Box
           sx={{
             mr: -17,
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
           }}
         >
+          <IconButton 
+            onClick={handlePreviousDate}
+            disabled={isFirstDate}
+            sx={{ marginRight: "5px" }}
+          >
+            <ArrowBackIosIcon />
+          </IconButton>
           <Button 
             onClick={handleOpenDialog}
             sx={buttonStyle}
@@ -123,6 +156,13 @@ function TopicsChart() {
             />
             {formatDateForButton(selectedDate)}
           </Button>
+          <IconButton 
+            onClick={handleNextDate}
+            disabled={isLastDate}
+            sx={{ marginLeft: "5px" }}
+          >
+            <ArrowForwardIosIcon />
+          </IconButton>
         </Box>
         <Dialog 
           open={dialogOpen} 
@@ -221,11 +261,7 @@ function TopicsChart() {
           <Typography variant="h5">
             {zoomedTopicId
               ? `熱門話題: ${
-                  data?.data.topics.at(Number(zoomedTopicId))?.keywords.at(0)
-                    ?.name
-                }, ${
-                  data?.data.topics.at(Number(zoomedTopicId))?.keywords.at(1)
-                    ?.name
+                  data?.data.topics.at(Number(zoomedTopicId))?.name
                 }`
               : "全部話題"}
           </Typography>
